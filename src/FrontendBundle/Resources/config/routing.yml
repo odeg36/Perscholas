@@ -1,0 +1,43 @@
+frontend_homepage:
+    path:     /
+    defaults: { _controller: FrontendBundle:Default:index }
+frontend_calendario:
+    path:     /calendario
+    defaults: { _controller: FrontendBundle:Default:calendario }
+frontend_informe:
+    path:     /informes
+    defaults: { _controller: FrontendBundle:Default:informes }
+frontend_facturacion:
+    path:     /facturacion/{sede}
+    defaults: { _controller: FrontendBundle:Default:facturacion, sede: 0 }
+frontend_soporte:
+    path:     /soportes/{sede}
+    defaults: { _controller: FrontendBundle:Default:soportes, sede: 0 }
+frontend_help:
+    path:     /help
+    defaults: { _controller: FrontendBundle:Default:help }
+    
+    
+frontend_reporte_detallado:
+    path:     /reporte-detallado
+    defaults: { _controller: FrontendBundle:Reporte:detallado }
+    
+frontend_reporte_operativo:
+    path:     /reporte-operativo
+    defaults: { _controller: FrontendBundle:Reporte:operativo }
+    
+frontend_reporte_economico:
+    path:     /reporte-economico
+    defaults: { _controller: FrontendBundle:Reporte:economico }
+    
+frontend_reporte_capacitaciones:
+    path:     /reporte-capacitaciones
+    defaults: { _controller: FrontendBundle:Reporte:capacitaciones }
+    
+frontend_reporte_checklist:
+    path:     /reporte-checklist
+    defaults: { _controller: FrontendBundle:Reporte:checklist }
+    
+frontend_reporte_disposicion:
+    path:     /reporte-disposicion
+    defaults: { _controller: FrontendBundle:Reporte:residuosDisposicion }

@@ -1,0 +1,40 @@
+{% extends "BackendBundle:Reportes:base_grafica_pdf.html.twig" %}
+{% block content %}
+    <div>
+        <img src="{{graficaBase64}}" width="100%" height="300">
+    </div>
+    <table style="border-collapse: collapse" border>
+        <thead>
+            <tr>
+                <th>
+                    Mes/Peso en KG
+                </th>
+                {% for tipoResiduo in tiposResiduos %}
+                    <th>
+                        {{tipoResiduo.nombre}}
+                    </th>
+                {% endfor %}
+                <th>
+                    Total
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for fecha,tipos in datos %}
+                <tr>
+                    <td>{{fecha}}</td>
+                    {% set sumaTotal =  0 %}
+                    {% for tipo in tipos%}
+                        {% set sumaTotal = sumaTotal+ tipo.peso %}
+                        <td style="text-align: right">
+                            <span class="peso">{{tipo.peso|number_format(3, ',', '.')}}</span>
+                        </td>
+                    {% endfor %}
+                    <td style="text-align: right">
+                        <span class="peso">{{sumaTotal|number_format(3, ',', '.')}}</span>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

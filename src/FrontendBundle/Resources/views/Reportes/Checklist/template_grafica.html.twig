@@ -1,0 +1,94 @@
+{% set total = (cumplen|length)+(noCumplen|length)%}
+<script type="text/javascript">
+    google.charts.setOnLoadCallback(drawChartChecklist);
+    function drawChartChecklist() {
+        var data = google.visualization.arrayToDataTable([
+            ['Residuo', 'Cantidad'],
+            ['Cumplen', {{cumplen|length}}],
+            ['No Cumplen', {{noCumplen|length}}]
+        ]);
+        var chart = new google.visualization.PieChart(document.getElementById('{{nombre_grafica}}'));
+        google.visualization.events.addListener(chart, 'ready',
+                function () {
+                    $('#form_checklist').find('#r_checklist_form_imagen_grafica').val(chart.getImageURI());
+                    $('#form_checklist').find('button[name="excel"]').eq(0).removeAttr('disabled');
+                    $('#form_checklist').find('button[name="pdf"]').eq(0).removeAttr('disabled');
+                });
+        var options = {
+            title: '{{titulo}}',
+            is3D: true,
+            animation: {
+                duration: 1000,
+                startup: true
+            },
+            legend: {position: 'labeled'}
+        };
+        chart.draw(data, options);
+    }
+    $(window).resize(function () {
+        if (drawChartChecklist && typeof drawChartChecklist === 'function') {
+            drawChartChecklist();
+        }
+    });
+</script>
+<div class="col-md-12">
+    <div id="{{nombre_grafica}}" style="width: 100%; height: 400px; margin: 0 auto"></div>
+</div>
+<div class="col-md-6" style="border-right: 1px solid #77933c">
+    <h4>Cumplen: {{cumplen|length}}</h4>
+    <table class="table table-bordered" style="width:100%">
+        <thead>
+            <tr>
+                <th>Cliente</th>
+                <th>Centro de costo</th>
+                <th>Fecha ejecutada</th>
+                <th>Archivo</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for seguimiento in cumplen %}
+                <tr>
+                    <td>{{seguimiento.centroRecoleccion.cliente}}</td>
+                    <td>{{seguimiento.centroRecoleccion}}</td>
+                    <td>{{seguimiento.fechaEjecucion|date('d-m-Y')}}</td>
+                    <td>
+                        {% if seguimiento.archivoEncuesta %}
+                            <a href="{{seguimiento.archivoEncuesta}}" target="_blank" class="btn btn-default">Ver archivo <i class="fa fa-download"></i></a>
+                        {% else %}
+                            No ha sido subido
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<div class="col-md-6">
+    <h4>No Cumplen: {{noCumplen|length}}</h4>
+    <table class="table table-bordered" style="width:100%">
+        <thead>
+            <tr>
+                <th>Cliente</th>
+                <th>Centro de costo</th>
+                <th>Fecha ejecutada</th>
+                <th>Archivo</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for seguimiento in noCumplen %}
+                <tr>
+                    <td>{{seguimiento.centroRecoleccion.cliente}}</td>
+                    <td>{{seguimiento.centroRecoleccion}}</td>
+                    <td>{{seguimiento.fechaEjecucion|date('d-m-Y')}}</td>
+                    <td>
+                        {% if seguimiento.archivoEncuesta %}
+                            <a href="{{seguimiento.archivoEncuesta}}" target="_blank" class="btn btn-default">Ver archivo <i class="fa fa-download"></i></a>
+                        {% else %}
+                            No ha sido subido
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,115 @@
+<!-- N A V B A R -->
+<nav class="navbar navbar-default top-menu-grun">
+    <div class="container-fluid">
+
+        <!-- Brand -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#top-menu-grun-collapse" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="{{ path("frontend_homepage") }}"><img src="{{asset("bundles/frontend/images/horizontal_logo_grun.png") }}" alt=""></a>
+        </div>
+
+        <!-- Collapse menu -->
+        <div class="collapse navbar-collapse top-menu-grun-collapse" id="top-menu-grun-collapse">
+            <ul class="nav navbar-nav navbar-left">
+                {% if app.user%}
+                    <li {{ ruta is defined and ruta ==  'calendario' ? 'class="active"' }}>
+                        <a href="{{ path("frontend_calendario") }}"><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>
+                            <span>{{ 'Calendar' | trans() }}</span></a>
+                    </li>
+                    <li {{ ruta is defined and ruta ==  'soportes' ? 'class="active"' }}>
+                        <a href="{{ path("frontend_soporte") }}"><span class="glyphicon glyphicon-paperclip" aria-hidden="true"></span>
+                            <span>{{ 'Support' | trans() }}</span></a>
+                    </li>
+                    <li {{ ruta ==  'informes' ? 'class="active"' }}>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                            <span class="glyphicon glyphicon-signal" aria-hidden="true"></span>
+                            <span>{{ 'Informes' | trans() }}</span>
+                        </a>
+                        <ul class="dropdown-menu" >
+                            <li><a href="{{ path("frontend_reporte_detallado") }}">Reporte detallado de indicadores</a></li>
+                            <li><a href="{{ path("frontend_reporte_operativo") }}">Operativo</a></li>
+                            <li><a href="{{ path("frontend_reporte_economico") }}">Ecónomico</a></li>
+                            <li><a href="{{ path("frontend_reporte_capacitaciones") }}">Capacitaciones</a></li>
+                            <li><a href="{{ path("frontend_reporte_checklist") }}">Checklist</a></li>
+                            <li><a href="{{ path("frontend_reporte_disposicion") }}">Tipos de residuos y sus disposiciones</a></li>
+                        </ul>
+                    </li>
+                    <li {{ ruta is defined and ruta ==  'facturacion' ? 'class="active"' }}>
+                        <a href="{{ path("frontend_facturacion") }}"><span class="glyphicon glyphicon-credit-card" aria-hidden="true"></span>
+                            <span>{{ 'Billing' | trans() }}</span></a>
+                    </li>
+                    <li class="dropdown {{ ruta is defined and ruta == 'ayuda' ? 'active' }}">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                            <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+                            <span>{{ 'Help' | trans() }}</span>
+                        </a>
+                        <ul class="dropdown-menu" >
+                            <li><a href="{{ path("frontend_help",{'tipo':'manuales'}) }}">Manuales de usuario</a></li>
+                            <li><a href="{{ path("frontend_help",{'tipo':'preguntas'}) }}">Preguntas frecuentes</a></li>
+                        </ul>
+                    </li>
+                {% endif %}
+            </ul>
+            <div class="nav navbar-nav navbar-right">
+                {% if app.user%}
+                    <div class="navbar-right-buttons">
+                        <div class="dropdown alerts-top-menu active">
+                            <a id="dLabel" data-target="#" href="http://example.com" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+                            </a>
+                            <ul id="alertas" class="dropdown-menu" aria-labelledby="dLabel">
+                                <li id="cargarMas" onclick="cargarMas();" style="cursor:pointer">Cargar más</li>
+                            </ul>
+                        </div>
+                        {% if is_granted('ROLE_CLIENTE') == false %}
+                            <a href="{{ path("sonata_admin_dashboard") }}">
+                                <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+                            </a>
+                        {% endif %}
+                        <a href="{{ path("fos_user_security_logout") }}"><span class="glyphicon glyphicon-off" aria-hidden="true"></span></a>
+                    </div>
+                {% endif %}
+            </div>
+        </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+</nav>
+
+<!-- Modal L O G I N -->
+<div class="modal fade modal_login_grun" id="contacto_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog modal-md" role="document">
+        <div class="modal-content">
+            <!-- modal header-->
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Contacto</h4>
+            </div>
+            <!-- modal body-->
+            <div class="modal-body">
+                <form class="form-horizontal" action="{{ path("fos_user_security_check") }}" method="post" role="form" class="form-horizontal" novalidate>
+                    <div class="form-group">
+                        <div class="col-xs-12 col-md-12">
+                            <input type="text" class="form-control" id="username" name="_username" value="" required="required"
+                                   placeholder="{{ 'Username or email'|trans() }}"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-xs-12 col-md-12">
+                            <input type="password" class="form-control" id="password" name="_password" required="required" 
+                                   placeholder="{{ 'security.login.password'|trans({}, 'FOSUserBundle')|replace({':': ''}) }}"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-xs-12 col-md-12">
+                            <button type="submit" class="btn-submit-login">{{ 'Contactar'| trans() }}</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

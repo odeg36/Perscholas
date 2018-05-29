@@ -1,0 +1,66 @@
+{% extends "BackendBundle:Reportes:base_grafica_pdf.html.twig" %}
+{% block content %}
+    <div class="col-md-12">
+        <div>
+            <img src="{{graficaBase64}}" width="100%" height="300">
+        </div>
+    </div>
+    <div style="border-right: 1px solid #77933c;width: 48%; float: left; padding: 2px;">
+        <h4>Cumplen: {{cumplen|length}}</h4>
+        <table class="table table-bordered" style="width:100%">
+            <thead>
+                <tr>
+                    <th>Cliente</th>
+                    <th>Centro de costo</th>
+                    <th>Fecha ejecutada</th>
+                    <th>Archivo</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for seguimiento in cumplen %}
+                    <tr>
+                        <td>{{seguimiento.centroRecoleccion.cliente}}</td>
+                        <td>{{seguimiento.centroRecoleccion}}</td>
+                        <td>{{seguimiento.fechaEjecucion|date('d-m-Y')}}</td>
+                        <td>
+                            {% if seguimiento.archivoEncuesta %}
+                                <a href="{{ seguimiento.archivoEncuesta}}" target="_blank" class="btn btn-default">Ver archivo <i class="fa fa-download"></i></a>
+                                {% else %}
+                                No ha sido subido
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div style="width: 48%;float: left; padding: 10px;">
+        <h4>No Cumplen: {{noCumplen|length}}</h4>
+        <table class="table table-bordered" style="width:100%">
+            <thead>
+                <tr>
+                    <th>Cliente</th>
+                    <th>Centro de costo</th>
+                    <th>Fecha ejecutada</th>
+                    <th>Archivo</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for seguimiento in noCumplen %}
+                    <tr>
+                    <td>{{seguimiento.centroRecoleccion.cliente}}</td>
+                        <td>{{seguimiento.centroRecoleccion}}</td>
+                        <td>{{seguimiento.fechaEjecucion|date('d-m-Y')}}</td>
+                        <td>
+                            {% if seguimiento.archivoEncuesta %}
+                                <a href="{{ seguimiento.archivoEncuesta}}" target="_blank" class="btn btn-default">Ver archivo <i class="fa fa-download"></i></a>
+                                {% else %}
+                                No ha sido subido
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

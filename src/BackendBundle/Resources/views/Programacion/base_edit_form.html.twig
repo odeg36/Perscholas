@@ -1,0 +1,900 @@
+
+{% block form %}
+    <style type="text/css">
+        hr{
+            border-top: 3px solid #eee;
+        }
+        .row.odd{
+            background-color: #eee;
+        }
+        .row.even{
+            background-color: #e6e6e6;
+        }
+        .btn_agresiduo{
+            font-weight: bold;
+            color: #974000;
+        }
+        .eliminar_residuo{
+            float: right;
+            color: red;
+        }
+        .titulo_residuo{
+            font-size: 22px;
+            text-transform: uppercase;
+            font-weight: bold;
+            color: #974000;
+        }
+        .total_residuo{
+            font-size: 18px;
+            text-transform: uppercase
+        }
+        .valor_total_residuo{
+            font-size: 17px;
+        }
+    </style>
+    <script>
+        function eliminarSeccion(span){
+            swal({
+                title: "¿Desea eliminar este tipo de residuo de la programación?",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Aceptar",
+                cancelButtonText: "Cancelar",
+                closeOnConfirm: false,
+                closeOnCancel: false}
+            , function (isConfirm) {
+                if (isConfirm) {
+                    $(span).parent().parent().parent().hide('slow', function(){ $(span).parent().parent().parent().remove(); });
+                }
+                swal.close();
+            });
+        }
+        
+        function eliminarRecoleccion(div){
+            swal({
+                title: "¿Desea eliminar esta recolección?",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Aceptar",
+                cancelButtonText: "Cancelar",
+                closeOnConfirm: false,
+                closeOnCancel: false}
+            , function (isConfirm) {
+                if (isConfirm) {
+                    $(div).parent().hide('slow', function(){ $(div).parent().remove(); });
+                }
+                swal.close();
+            });
+        }
+        function eliminarResiduo(span){
+            swal({
+                title: "¿Desea eliminar este residuo?",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Aceptar",
+                cancelButtonText: "Cancelar",
+                closeOnConfirm: false,
+                closeOnCancel: false}
+            , function (isConfirm) {
+                if (isConfirm) {
+                    $(span).parent().parent().hide('slow', function(){ $(span).parent().parent().remove(); });
+                }
+                swal.close();
+            });
+        }
+        function lenguajeCalendario(){
+            $.datepicker.regional['es'] = {
+                closeText: 'Cerrar',
+                prevText: '<Ant',
+                nextText: 'Sig>',
+                currentText: 'Hoy',
+                monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+                monthNamesShort: ['Ene','Feb','Mar','Abr', 'May','Jun','Jul','Ago','Sep', 'Oct','Nov','Dic'],
+                dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+                dayNamesShort: ['Dom','Lun','Mar','Mié','Juv','Vie','Sáb'],
+                dayNamesMin: ['Do','Lu','Ma','Mi','Ju','Vi','Sá'],
+                weekHeader: 'Sm',
+                dateFormat: 'dd/mm/yy',
+                firstDay: 1,
+                isRTL: false,
+                showMonthAfterYear: false,
+                yearSuffix: ''
+            };
+            $.datepicker.setDefaults($.datepicker.regional['es']); 
+        }
+        $(document).ready(function(){
+            lenguajeCalendario();
+            swal.setDefaults({ animation: 'slide-from-top' });
+            $('select.id_residuo').each(function(){
+                $(this).select2({width: '80%'});
+            });
+            $('input#programacion_form_gestor_ambiental').val($('#programacion_form_gestor_ambiental').val());
+        });
+        function calcularPeso(contador,recoleccion) {
+            var volumen = $('#tipo_residuo_' + contador + '_recoleccion_'+recoleccion+'_volumen').length > 0 ? $('#tipo_residuo_' + contador + '_recoleccion_'+recoleccion+'_volumen').val().split('.').join("").split(',').join("."):null;
+            var cantidad = $('#tipo_residuo_' + contador + '_recoleccion_'+recoleccion+'_cantidad').length > 0 ?$('#tipo_residuo_' + contador + '_recoleccion_'+recoleccion+'_cantidad').val().split('.').join("").split(',').join("."):null;
+            var divp = $('#table_' + contador + '_'+ recoleccion);
+            $.each(divp.find('div.row'), function (k, v) {
+                var densidad = $(this).find('input[name*="[densidad]"]').length > 0?$(this).find('input[name*="[densidad]"]').val().split('.').join("").split(',').join('.'):null;
+                var peso = 0;
+                if (densidad && cantidad && volumen) {
+                    var pesoCalculado = (volumen * cantidad * densidad)*1000;
+                    peso = $(this).find('input[name*="[peso]"]').val(format((pesoCalculado).toFixed(3).toString().split('.').join(","))).val().split('.').join("").split(',').join('.');
+                    $(this).find('input[name*="[densidad]"]').val(format($(this).find('input[name*="[densidad]"]').val()));
+                } else {
+                    peso = $(this).find('input[name*="[peso]"]').val().split('.').join("").split(',').join('.');
+                    $(this).find('input[name*="[peso]"]').val(format($(this).find('input[name*="[peso]"]').val()));
+                }
+                var precio = $(this).find('input[name*="[precio]"]').val().split('.').join("").split(',').join('.');
+                $(this).find('input[name*="[precio]"]').val(format(precio.toString().split('.').join(",")));
+                $(this).find('[id*="total"]').text(format((peso * precio).toFixed(3).toString().split('.').join(",")));
+            });
+            if (volumen || cantidad) {
+                $('#tipo_residuo_' + contador + '_recoleccion_'+recoleccion+'_volumen').val(format($('#tipo_residuo_' + contador + '_recoleccion_'+recoleccion+'_volumen').val()));
+                $('#tipo_residuo_' + contador + '_recoleccion_'+recoleccion+'_cantidad').val(format($('#tipo_residuo_' + contador + '_recoleccion_'+recoleccion+'_cantidad').val()));
+            }
+            var pesoTotalParcial = 0;
+            var precioTotalParcial = 0;
+            $(divp).parent().parent().parent().parent().find('[name*="[peso]"]').each(function () {
+                var peso = $(this);
+                pesoTotalParcial += parseFloat(peso.val().split('.').join("").split(',').join('.'));
+                precioTotalParcial += parseFloat(peso.parent().parent().find('[id*="total_"]').eq(0).text().split('.').join("").split(',').join('.'));
+            });
+            
+            var pesoTotal = 0;
+            var precioTotal = 0;
+            $('[name*="[peso]"]').each(function () {
+                var peso = $(this);
+                pesoTotal += parseFloat(peso.val().split('.').join("").split(',').join('.'));
+                precioTotal += parseFloat(peso.parent().parent().find('[id*="total_"]').eq(0).text().split('.').join("").split(',').join('.'));
+            });
+            setTimeout(function () {
+                $('#totalPeso_'+contador).text(format(pesoTotalParcial.toFixed(3).toString().split('.').join(",")));
+                $('#totalPrecio_'+contador).html('$'+format(precioTotalParcial.toFixed(3).toString().split('.').join(",")));
+                $('#totalPeso').text(format(pesoTotal.toFixed(3).toString().split('.').join(",")));
+                $('#totalPrecio').html('$'+format(precioTotal.toFixed(3).toString().split('.').join(",")));
+            }, 1000);
+        }
+        $('body').on('ifChecked', '[name*="[tipo_transporte]"]', function (event) {
+            poblarTipoTransporte($(this));
+        });
+        function bloquearCampos(tipo) {
+            var check = $(tipo);
+            var sectionRecoleccion = check.parent().parent().parent();
+            var tipo = check.val();
+            if(tipo === "personalizado"){
+                sectionRecoleccion.find('.bloquear_personalizado').hide();
+                sectionRecoleccion.find('.bloquear_personalizado').each(function(){
+                   $(this).find('input,select').each(function(){
+                       $(this).val('');
+                   }) 
+                });
+                sectionRecoleccion.find('.peso').removeAttr("readonly");
+            }
+            else{
+                sectionRecoleccion.find('.bloquear_personalizado').show();
+                sectionRecoleccion.find('.peso').attr("readonly",true);
+            }
+        }
+        function poblarTipoTransporte(check) {
+            bloquearCampos(check);
+            var check = $(check);
+            var value = check.val();
+            var selectTipoTransporte = check.parent().parent().next().find('select[id*="_id_tipo_transporte"]').eq(0);
+            var tipo = value;
+            if (tipo === "volqueta") {
+                tipo = "vehículo";
+            }
+            selectTipoTransporte.siblings('label').eq(0).text('Tipo de '+tipo);
+            selectTipoTransporte.empty();
+            selectTipoTransporte.data('tipo', value);
+            var data = {tipo: value};
+            $.ajax({
+                type: 'post',
+                url: '{{ path("ajax_tipo_transporte") }}',
+                data: data,
+                beforeSend: function (xhr) {
+                    $('#div_carga').show();
+                },
+                complete: function (jqXHR, textStatus) {
+                    $('#div_carga').hide();
+                },
+                success: function (data) {
+                    selectTipoTransporte.append('<option value=""></option>');
+                    for (var i = 0, total = data.length; i < total; i++) {
+                        selectTipoTransporte.append('<option value="' + data[i].id + '">' + data[i].name + '</option>');
+                    }
+                }
+            });
+        }
+        function obtenerVolumen(select, id,recoleccion) {
+            var data = {
+                tipo: $(select).data('tipo'),
+                id: $(select).val()
+            };
+            var volumenTipoTransporte = $('#tipo_residuo_'+id+'_recoleccion_'+recoleccion+'_volumen');
+            $.ajax({
+                type: 'post',
+                url: '{{ path("ajax_tipo_transporte") }}',
+                data: data,
+                beforeSend: function (xhr) {
+                    $('#div_carga').show();
+                },
+                complete: function (jqXHR, textStatus) {
+                    $('#div_carga').hide();
+                },
+                success: function (data) {
+                    if (data.length < 2) {
+                        volumenTipoTransporte.val(format(data[0].volumen.toString().split('.').join(",")));
+                        calcularPeso(id,recoleccion);
+                    }
+                }
+            });
+        }
+        function asignarDensidad(select, id,recoleccion) {
+            $(select).siblings("input").eq(0).val(format($(select).val()));
+            calcularPeso(id,recoleccion);
+        }
+    </script>
+    {{ sonata_block_render_event('sonata.admin.edit.form.top', { 'admin': admin, 'object': object }) }}
+
+    {% set url=admin.id(object) is not null ? 'edit' : 'create' %}
+    {% if copia is defined%}
+        {% set url='copia' %}
+    {% endif %}
+    {% if not admin.hasRoute(url)%}
+        <div>
+            {{ "form_not_available"|trans({}, "SonataAdminBundle") }}
+        </div>
+    {% else %}
+        <form
+            {% if admin_pool.getOption('form_type') == 'horizontal' %}class="form-horizontal"{% endif %}
+            role="form"
+            action="{{ admin.generateUrl(url, {'id': admin.id(object), 'uniqid': admin.uniqid, 'subclass': app.request.get('subclass')}) }}" {{ form_enctype(form) }}
+            method="POST"
+            {% if not admin_pool.getOption('html5_validate') %}novalidate="novalidate"{% endif %}
+            enctype="multipart/form-data"
+            >
+            <div class="box box-success">
+                <div class="box-header">
+                    <h3 class="box-title">
+                        Programación de recolección
+                    </h3>
+                </div>
+                <div class="box-body">
+                    <div class="sonata-ba-collapsed-fields">
+                        <div class="form-group" id="sonata-ba-field-container">
+                            {% if form.vars.errors|length> 0 %}
+                                <div class="sonata-ba-form-error">
+                                    {{ form_errors(form) }}
+                                </div>
+                            {% endif %}
+                            {% block sonata_pre_fieldsets %}
+                                <div class="row">
+                                {% endblock %}
+
+                                {% block sonata_tab_content %}
+                                    {% set has_tab=((admin.formtabs|length == 1 and admin.formtabs|keys[0] != 'default') or admin.formtabs|length> 1 ) %}
+
+                                    <div class="col-md-12">
+                                        {{form_row(form.cliente)}}
+                                        {{form_row(form.centro_recoleccion)}}
+                                        <div class="form-group">
+                                            <label class="control-label required" for="programacion_form_gestor_ambiental">
+                                                Gestor Ambiental            
+                                            </label>
+                                            <div>
+                                                <select id="programacion_form_gestor_ambiental" name="programacion_form[gestor_ambiental]" required="required" tabindex="-1" title="Gestor Ambiental" class="select2-offscreen">
+                                                    <option value="">Seleccione un gestor ambiental</option>
+                                                    {% for gestor in usuariosKontrolGrun %}
+                                                        <option {{object.gestorAmbiental and object.gestorAmbiental.id == gestor.id?"selected":'' }} value="{{gestor.id}}">{{gestor.username}} - Kontrol Grun</option>
+                                                    {% endfor %}
+                                                    {% set gestoresCliente = null%}
+                                                    {% set Cliente = null%}
+                                                    {% if object.centroRecoleccion %}
+                                                        {% set gestoresCliente = object.centroRecoleccion.cliente.gestores%}
+                                                        {% set Cliente = object.centroRecoleccion.cliente%}
+                                                    {% elseif app.user and app.user.cliente %}
+                                                        {% set gestoresCliente = app.user.cliente.gestores%}
+                                                        {% set Cliente = app.user.cliente %}
+                                                    {% endif %}
+                                                        {% for gestor in  gestoresCliente %}
+                                                            <option {{object.gestorAmbiental and object.gestorAmbiental.id == gestor.id?"selected":'' }} value="{{gestor.id}}">{{gestor.username}} - {{Cliente.nombre}}</option>
+                                                        {% endfor %}
+                                                </select>
+                                            </div>
+                                        </div>
+                                        {{form_row(form.gestor_ambiental)}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="box box-success">
+                    <div class="box-header">
+                        <h3 class="box-title">
+                            Datos de la recolección
+                        </h3>
+                    </div>
+                    <div class="box-body">
+                        <div class="sonata-ba-collapsed-fields">
+                            <div class="panel-group" id="accordion">
+                                <div id="nuevoTipoResiduo">
+                                    {% include "BackendBundle:Programacion:base_manifiesto_form.html.twig" with {'object': object} %}
+                                </div>
+                            </div>
+                            <span id="agregarTiposResiduos" class="pointer"><i class="fa fa-plus green"></i> Agregar nuevo tipo de residuo</span>
+                        </div>
+                    </div>
+                    <div class="box-footer">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Peso Total en Kg</th>
+                                    <th>Costo Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td id="totalPeso"></td>
+                                    <td id="totalPrecio"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+                <div class="box box-success">
+                    <div class="box-header">
+                        <h3 class="box-title">
+                            Información adicional
+                        </h3>
+                    </div>
+                    <div class="box-body">
+                        <div class="sonata-ba-collapsed-fields">
+                            {{form_row(form.pesado_en_centro_recoleccion)}}
+                            {{form_row(form.observacion)}}
+                        </div>
+                    {% endblock %}
+
+                    {% block sonata_post_fieldsets %}
+                    {% endblock %}
+
+                    {{ form_rest(form) }}
+
+                    {% block formactions %}
+                        {% if copia is not defined %}
+                            {% set copia  = false %}
+                        {% endif %}
+                        {% include "BackendBundle:Default:botones.html.twig" with {'object': object,'copia':copia} %}
+                    {% endblock formactions %}
+                </div>
+            </div>
+        </form>
+{% endif%}
+{{ sonata_block_render_event('sonata.admin.edit.form.bottom', { 'admin': admin, 'object': object }) }}
+<span id="tiposResiduos" data-tipos="{{tipos_residuos |json_encode()}}"></span>
+<script>
+    var contadorTiposResiduos ={{object.tiposResiduosTransporte|length> 0 ? object.tiposResiduosTransporte|length : 0}} ;
+    $('#agregarTiposResiduos').click(function () {
+        $('.panel-collapse').each(function(){
+            if ($(this).hasClass('in')) {
+                $(this).collapse('hide');
+            }
+        });
+        var tiposResiduos = $('#tiposResiduos').data('tipos');
+        var html ='';
+        html += '<div class="panel panel-default" style="display: none;" id="panel_' + contadorTiposResiduos + '">';
+            html += '<div class="panel-heading">';
+                html += '<h4 class="panel-title">';
+                    html += '<a data-toggle="collapse" data-parent="#accordion" href="#collapse' + contadorTiposResiduos + '">';
+                        html += '<span class="fa fa-edit"></span>';
+                    html += '</a>';
+                    html += '<span class="fa fa-remove pointer-red" style="float:right;" onclick="eliminarSeccion(this)"></span>';
+                html += '</h4>';
+            html += '</div>';
+            html += '<div id="collapse' + contadorTiposResiduos + '" class="panel-collapse collapse in">';
+                html += '<div class="panel-body">';
+                    html += '<div class="contenido-tipo-residuo">';
+                        html += '<div class="col-md-12">';
+                            html += '<label class="control-label">Tipo de residuo</label>';
+                            html += '<select id="tipo_residuo_' + contadorTiposResiduos + '" name="tipo_residuo_' + contadorTiposResiduos + '[id]" onchange="definirTransporte(this,' + contadorTiposResiduos + ')" data-validate="No" class="id_tipo_residuo">';
+                                html += '<option value="">Seleccione un tipo de residuo</option>';
+                                $.each(tiposResiduos, function (k, v) {
+                                    html += '<option value="' + v.id + '">' + v.nombre + '</option>';
+                                });
+                            html += '</select>';
+                        html += '</div>';
+                    html += '</div>';
+                html += '<div id="anexo_' + contadorTiposResiduos + '" class="col-md-12" style="display: none;">';
+                html += '</div>';
+            html += '</div>';
+        html += '</div>';
+        $('#nuevoTipoResiduo').append(html);
+        $('#panel_' + contadorTiposResiduos).show('slow');
+        $('#tipo_residuo_' + contadorTiposResiduos).select2({width: '100%'});
+        contadorTiposResiduos++;
+    });
+    function definirTransporte(select, contador) {
+        var selectField = $(select);
+        var anexo = selectField.parent().parent().parent().parent().parent().find("#anexo_" + contador).eq(0);
+        anexo.html("");
+        var error = false;
+        $('select.id_tipo_residuo[id!="'+selectField.attr('id')+'"]').each(function(){
+            if ($(this).val() && selectField.val() == $(this).val()) {
+                swal('Usted ya escogio el tipo de residuo "'+selectField.find('option:selected').text()+'"');
+                error = true;
+            }
+        });
+        if (selectField.val() == "") {
+            error = true;
+        }
+        if (error) {
+            selectField.val("");
+            return false;
+        }
+        var tiposResiduos = $('#tiposResiduos').data('tipos');
+        var usaContenedor = false;
+        var usaVolqueta = false;
+        $.each(tiposResiduos, function (k, v) {
+            if (selectField.val() == v.id) {
+                usaContenedor = v.usa_contenedor;
+                usaVolqueta = v.usa_volqueta;
+            }
+        });
+            var html = '';
+            html += '<div class="col-md-12">';
+                html += '<div class="row">';
+                    html += '<div class="form-group">';
+                        html += '<div class="col-md-12">';
+                            html += '<div id="recoleccion_'+contador+'" class="col-md-12">';
+                            html += '</div>';
+                            html += '<div  class="pointer" style="text-align: left;" onclick="agregarRecoleccion(' + usaContenedor + ',' + usaVolqueta + ',' + contador + ','+selectField.attr('id')+')"><i class="fa fa-plus green"></i> Agregar recolección</div>';
+                        html += '</div>';
+                    html += '</div>';
+                html += '</div>';
+            html += '</div>';
+            html += '<div class="col-md-12">';
+                html += '<div class="col-md-6">';
+                    html += '<div class="table-total-parcial">';
+                        html += '<table class="table table-striped">';
+                            html += '<thead>';
+                                html += '<tr>';
+                                    html += '<th class="titulo_programacion">Tipo de residuo</th>';
+                                    html += '<th class="titulo_programacion">Última fecha de recolección</th>';
+                                    html += '<th class="titulo_programacion">Peso en Kg</th>';
+                                    html += '<th class="titulo_programacion">Costo</th>';
+                                html += '</tr>';
+                            html += '</thead>';
+                            html += '<tbody>';
+                                html += '<tr>';
+                                    html += '<td>'+selectField.find('option:selected').text()+'</td>';
+                                    html += '<td id="fecha_recoleccion_' + contador + '"></td>';
+                                    html += '<td id="totalPeso_' + contador + '"></td>';
+                                    html += '<td id="totalPrecio_' + contador + '"></td>';
+                                html += '</tr>';
+                            html += '</tbody>';
+                        html += '</table>';
+                    html += '</div>';
+                html += '</div>';
+                html += '<div class="col-md-6">';
+                    html += '<label class="control-label">Certificado de disposición</label>';
+                    html += '<input type="file" id="tipo_residuo_' + contador + '_certificado" name="tipo_residuo_' + contador + '[certificado]" class=" form-control" data-validate="no"> ';
+                html += '</div>';
+            html += '</div>';
+            anexo.html(html);
+            $('.select2').each(function () {
+               if (!$(this).data('select2')) {
+                   $(this).select2({width: "100%"});
+               }
+           });
+            $('#anexo_' + contador).show('slow');
+        }
+        function agregarRecoleccion(usaContenedor, usaVolqueta, contador,selectFieldId) {
+            if (typeof selectFieldId == "string") {
+                var selectField = $("#"+selectFieldId);
+            }else{
+                var selectField = $(selectFieldId);
+            }
+            var recoleccion = $('#recoleccion_'+contador);
+            var secciones = recoleccion.find('section').length + 1;
+            var html = '<section class="col-md-12">';
+                html += '<div class="col-md-12" onclick="eliminarRecoleccion(this)"><i class="fa fa-remove fa-2x pointer-red eliminar_residuo"></i></div>';
+                html += '<div class="col-md-6">';
+                    html += '<label class="control-label required" >Fecha de programación</label>';
+                    html += '<input value="" type="text" id="tipo_residuo_' + contador + '_recoleccion_'+secciones+'_fecha_programacion" name="tipo_residuo_' + contador + '[recoleccion]['+secciones+'][fecha_programacion]" required="required" class="datepicker form-control" data-provide="datepicker" data-date-format="dd-mm-yyyy">';
+                html += '</div>';
+                html += '<div class="col-md-6">';
+                    html += '<label class="control-label required" >Fecha de ejecución recolectada</label>';
+                    html += '<input value="" type="text" id="tipo_residuo_' + contador + '_recoleccion_'+secciones+'_fecha_recoleccion" name="tipo_residuo_' + contador + '[recoleccion]['+secciones+'][fecha_recoleccion]" required="required" class="datepicker form-control" data-provide="datepicker" data-date-format="dd-mm-yyyy">';
+                html += '</div>';
+                if (usaContenedor && usaVolqueta) {
+                    html += '<div class="col-md-12">';
+                        html += '<br><input type="radio" class="form-control" id="tipo_transporte_' + contador + '_contenedor" name="tipo_residuo_' + contador + '[recoleccion]['+secciones+'][tipo_transporte]" value="contenedor" onClick="poblarTipoTransporte(this,' + contador + ' );"> <label class="control-label"> Contenedor </label>&nbsp;';
+                        html += '<input type="radio" id="tipo_transporte_' + contador + '_volqueta" name="tipo_residuo_' + contador + '[recoleccion]['+secciones+'][tipo_transporte]" value="volqueta" onClick="poblarTipoTransporte(this,' + contador + ' );"> <label class="control-label" > Vehículo </label>';
+                        html += '<input type="radio" id="tipo_transporte_' + contador + '_personalizado" name="tipo_residuo_' + contador + '[recoleccion]['+secciones+'][tipo_transporte]" value="personalizado" onClick="poblarTipoTransporte(this,' + contador + ' );"> <label class="control-label" > Peso personalizado </label>';
+                    html += '<br></div>';
+                    html += '<div class="bloquear_personalizado">';
+                        html += '<div class="col-md-6">';
+                                html += '<label class="control-label">Tipo</label>';
+                                html += '<select class="cpersonalizado" id="tipo_residuo_' + contador + '_id_tipo_transporte" name="tipo_residuo_' + contador + '[recoleccion]['+secciones+'][id_tipo_transporte]" data-tipo="" onchange="obtenerVolumen(this,' + contador + ','+secciones+' )" required>';
+                                html += '</select>';
+                        html += '</div>';
+                    html += '</div>';
+                } else {
+                    if (usaVolqueta) {
+                        html += '<div class="col-md-6">';
+                            html += '<label class="control-label required">Vehículo</label>';
+                            html += '<input type="hidden" class="form-control" name="tipo_residuo_' + contador + '[recoleccion]['+secciones+'][tipo_transporte]" value="volqueta">';
+                            html += '<select class="cpersonalizado form-control"id="tipo_residuo_' + contador + '_id_tipo_transporte" name="tipo_residuo_' + contador + '[recoleccion]['+secciones+'][id_tipo_transporte]" data-tipo="volqueta" onchange="obtenerVolumen(this,' + contador + ','+secciones+' )" required>';
+                                html += '<option> Tipo de vehículo </option>';
+                                {% for volqueta in getVolquetas() %}
+                                    html += '<option value="{{volqueta.id}}">{{volqueta.nombre}} </option>';
+                                {% endfor %}
+                            html += '</select>';
+                        html += '</div>';
+                        } else if (usaContenedor) {
+                            html += '<div class="col-md-6">';
+                                    html += '<label class="control-label required">Contenedor</label>';
+                                    html += '<input type="hidden" name="tipo_residuo_' + contador + '[recoleccion]['+secciones+'][tipo_transporte]" value="contenedor">';
+                                    html += '<select class="cpersonalizado form-control" id="tipo_residuo_' + contador + '_id_tipo_transporte" name="tipo_residuo_' + contador + '[recoleccion]['+secciones+'][id_tipo_transporte]" data-tipo="contenedor" onchange="obtenerVolumen(this,' + contador + ','+secciones+' )" required>';
+                                    html += '<option value=""> Tipo de contenedor </option>';
+                                    {% for contenedor in getContenedores() %}
+                                        html += '<option value="{{contenedor.id}}">{{contenedor.nombre}} </option>';
+                                    {% endfor %}
+                                    html += '</select>';
+                            html += '</div>';
+                        }
+                    }
+                    html += '<div class="bloquear_personalizado ">';
+                    if (usaContenedor || usaVolqueta) {
+                        html += '<div class="col-md-3">';
+                                html += '<label class="control-label required"> Volumen M <sup> 3 </sup></label>';
+                                html += '<div> <input type="text" class="cpersonalizado form-control" value="" name="tipo_residuo_' + contador + '[recoleccion]['+secciones+'][volumen]" id="tipo_residuo_' + contador + '_recoleccion_'+secciones+'_volumen" onkeyup="calcularPeso(' + contador + ','+secciones+')" required> </div>';
+                        html += '</div>';
+
+                        html += '<div class="col-md-3">';
+                                html += '<label class="control-label required"> Cantidad </label>';
+                                html += '<div> <input type="text" class="cpersonalizado form-control" value="" name="tipo_residuo_' + contador + '[recoleccion]['+secciones+'][cantidad]" id="tipo_residuo_' + contador + '_recoleccion_'+secciones+'_cantidad" onkeyup="calcularPeso(' + contador + ','+secciones+')" required> </div>';html += '</div>';
+                        html += '</div>';
+                    }
+                html += '<div class="col-md-12">';
+                    html += '<br><label class="control-label">Manifiesto de transporte</label>';
+                    html += '<input type="file" id="tipo_residuo_' + contador + '_manifiesto" name="tipo_residuo_' + contador + '[recoleccion]['+secciones+'][manifiesto]" class=" form-control" data-validate="no"> ';
+                html += '</div>';
+                html += '<div class="col-md-12">';
+                    html += '<br><label class="control-label required">Residuos </label> &nbsp;&nbsp;<i class="fa fa-plus green"></i><span onclick="agregarResiduo(this,' + usaContenedor + ',' + usaVolqueta + ',' + contador + ','+secciones+','+selectField.val()+')" class=" pointer btn_agresiduo">Agregar residuo</span>';
+                    html += '<br><br><div class="col-md-12" id="table_' + contador + '_' + secciones + '">';
+                html += '</div>';
+            var value = selectField.val();
+            if (value) {
+                $.ajax({
+                    type: 'post',
+                    url: '{{ path("ajax_residuos") }}',
+                    data: {
+                        tipo_residuo_id: value
+                    },
+                    beforeSend: function (xhr) {
+                        $('#div_carga').show();
+                    },
+                    complete: function (jqXHR, textStatus) {
+                        $('#div_carga').hide();
+                    },
+                    success: function (data) {
+                        html += "<span class='json_residuos' data-tipos='" + JSON.stringify(data.residuos) + "'></span>";
+                    html += '</div>';
+            html += '</section>';
+                        recoleccion.append(html);
+                        $('#anexo_' + contador).show('slow');
+                        lenguajeCalendario();
+                        $('#tipo_residuo_' + contador + '_recoleccion_'+secciones+'_fecha_recoleccion').datepicker({
+                            dateFormat: "dd-mm-yy",
+                            onSelect: function(dateText) {
+                                $('#fecha_recoleccion_' + contador).text(dateText);
+                            }
+                        });
+                        $('#tipo_residuo_' + contador + '_recoleccion_'+secciones+'_fecha_programacion').datepicker({
+                            dateFormat: "dd-mm-yy",
+                            onSelect: function(dateText) {
+                                var campoFechaRecoleccion = $(this).parent().next().children('input').eq(0);
+                                campoFechaRecoleccion.datepicker('setDate',dateText);
+                                $('#fecha_recoleccion_' + contador).text(dateText);
+                            }
+                        });
+                        $('input[type="radio"]').iCheck({
+                            checkboxClass: 'icheckbox_square-blue',
+                            radioClass: 'iradio_square-blue'
+                        });
+                        $('[id*="_id_tipo_transporte"]').each(function () {
+                           if (!$(this).data('select2')) {
+                               $(this).select2({width: "100%"});
+                           }
+                       });
+                        $('.select2').each(function () {
+                           if (!$(this).data('select2')) {
+                               $(this).select2({width: "100%"});
+                           }
+                       });
+                        $.each(data.disposicion.disposiciones,function(k,v){
+                            var option = '<option value="'+v.id+'">'+v.nombre+'</option>';
+                           $(recoleccion).find('#tipo_residuo_' + contador + 'recoleccion_'+secciones+'_disposicion').eq(0).append(option); 
+                        });
+                    }
+                });
+            }
+        }
+        function agregarResiduo(buttonClicked, usaContenedor, usaVolqueta, contador,secciones,value) {
+            var button = $(buttonClicked);
+            var jsonResiduos = button.parent().parent().parent().find('span.json_residuos').data('tipos');
+            var tbody = button.parent().find('div').eq(0);
+            var filas = tbody.find('div.row').length + 1;
+            var html='';
+            var estilo = '';
+            if((filas % 2) == 0 ){
+                estilo = "odd";
+            }
+            else{
+                estilo = "even";
+            }
+                html += '<br>';
+                html += '<div class="row '+estilo+'">';
+                    html += '<span class="col-md-12">';
+                        html += '<span class="fa fa-remove fa-2x pointer-red eliminar_residuo" onclick="eliminarResiduo(this)"></span>';
+                        html += '<h4 class="titulo_residuo">Residuo # '+filas+'</h4>';
+                    html += '</span>';
+                    html += '<span class="col-md-4">';
+                        html += '<label>Residuo</label><br>';
+                        html += '<select class="select2 id_residuo" id="tipo_residuo_' + contador + '_residuos_' + filas + '_id" name="tipo_residuo_' + contador + '[recoleccion]['+secciones+'][residuos][' + filas + '][id]" onChange="setDensidad(this,' + contador + ','+secciones+')">';
+                        html += '<option value="">Escoja un residuo</option>';
+                        $.each(jsonResiduos, function (k, v) {
+                            html += '<option value="' + v.id + '">' + v.nombre + '</option>';
+                        });
+                        html += '</select>';
+                    html += '</span>';
+                    html += '<span class="col-md-4">';
+                        html += '<label>Disposición</label><br>';
+                        html += '<select id="tipo_residuo_' + contador + '_recoleccion_'+secciones+'_residuos_' + filas + '_disposicion" name="tipo_residuo_' + contador + '[recoleccion]['+secciones+'][residuos][' + filas + '][disposicion]" required class="select2"> ';
+                            html += '<option value="">Escoja una disposición</option>';
+                        html += '</select>';
+                    html += '</span>';
+                    html += '<span class="col-md-4">';
+                        html += '<label>Empresa recolectora de residuos</label><br>';
+                        html += '<select id="tipo_residuo_' + contador + '_recoleccion_'+secciones+'_residuos_' + filas + '_empresa" name="tipo_residuo_' + contador + '[recoleccion]['+secciones+'][residuos][' + filas + '][empresa]" required class="select2">';
+                            html += '<option value="">Seleccione una empresa recolectora de residuos</option>';
+                            {% for empresa in empresasRecolectoras%}
+                                html += '<option value="{{empresa.id}}">{{empresa.nombre}}</option>';
+                            {% endfor %} 
+                        html += '</select>';
+                    html += '</span>';
+                    html += '<p>&nbsp;</p>';
+                    html += '<span class="col-md-4">';
+                        html += '<label>¿Es aprovechable?</label><br>';
+                        html += '<input type="radio" class="form-control" id="tipo_residuo_' + contador + '_recoleccion_'+secciones+'_residuos_' + filas + '_reciclable" name="tipo_residuo_' + contador + '[recoleccion]['+secciones+'][residuos][' + filas + '][reciclable]" value="1" > <label class="control-label" > Sí </label>&nbsp;&nbsp;';
+                        html += '<input type="radio" class="form-control" id="tipo_residuo_' + contador + '_recoleccion_'+secciones+'_residuos_' + filas + '_reciclable" name="tipo_residuo_' + contador + '[recoleccion]['+secciones+'][residuos][' + filas + '][reciclable]" value="0" checked > <label class="control-label" > No </label>';
+                    html += '</span>';
+                    if (usaContenedor || usaVolqueta) {
+                        html += '<div class="bloquear_personalizado">';
+                            html += '<span class="col-md-4">';
+                                html += '<label>Densidad (t/m3)</label>';
+                                html += '&nbsp <input class="bloquear_personalizado" style="width:100%;padding: 4px;" type="text" value=""  name="tipo_residuo_' + contador + '[recoleccion]['+secciones+'][residuos][' + filas + '][densidad]" onkeyup="calcularPeso(' + contador + ','+secciones+')" required>';
+                            html += '</span>';
+                        html += '</div>';
+                    }
+                    html += '<span class="col-md-4">';
+                        html += '<label>Peso Kg</label>';
+                        var readonly = (usaContenedor || usaVolqueta) ? 'readonly' : '';
+                        html += '<input type="text" class="peso form-control" value="" ' + readonly + ' name="tipo_residuo_' + contador + '[recoleccion]['+secciones+'][residuos][' + filas + '][peso]" onkeyup="calcularPeso(' + contador + ','+secciones+')" required>';
+                    html += '</span>';
+                    html += '<span class="col-md-4">';
+                        html += '<label>Precio unitario ($)</label>';
+                        html += '<input type="text" class="form-control"  value=""  name="tipo_residuo_' + contador + '[recoleccion]['+secciones+'][residuos][' + filas + '][precio]" onkeyup="calcularPeso(' + contador + ','+secciones+')" required>';
+                    html += '</span>';
+                    html += '<span class="col-md-12">';
+                        html += '<br><label class="total_residuo">Total</label>';
+                        html += ' $<span class="valor_total_residuo" id="total_' + contador + '"> </span>';
+                    html += '</span>';
+                html += '</div>';
+            tbody.append(html);
+            var check = button.parent().parent().find('input[name="tipo_residuo_'+contador+'[recoleccion]['+secciones+'][tipo_transporte]"]:checked');
+            bloquearCampos(check);
+            $.ajax({
+                    type: 'post',
+                    url: '{{ path("ajax_residuos") }}',
+                    data: {
+                        tipo_residuo_id: value
+                    },
+                    beforeSend: function (xhr) {
+                        $('#div_carga').show();
+                    },
+                    complete: function (jqXHR, textStatus) {
+                        $('#div_carga').hide();
+                    },
+                    success: function (data) {
+                        $.each(data.disposicion.disposiciones,function(k,v){
+                            var option = '<option value="'+v.id+'">'+v.nombre+'</option>';
+                           $(tbody).find('#tipo_residuo_' + contador + '_recoleccion_'+secciones+'_residuos_' + filas + '_disposicion').eq(0).append(option); 
+                        });
+                        
+                    }
+                });
+            $(".select2").each(function () {
+                if (!$(this).data('select2')) {
+                    $(this).select2({width: "100%"});
+                }
+            });
+            $(".select2d").each(function () {
+                if (!$(this).data('select2')) {
+                    $(this).select2({width: "100%"});
+                }
+            });
+            $('select.id_residuo').each(function(){
+                $(this).select2({width: '80%'});
+            });
+            $('input[type="radio"]').iCheck({
+                checkboxClass: 'icheckbox_square-blue',
+                radioClass: 'iradio_square-blue'
+            });
+        }
+        $("#programacion_form_cliente").change(function () {
+            var data = {
+                cliente_id: $(this).val()
+            };
+            $.ajax({
+                type: 'post',
+                url: '{{ path("ajax_centros_recoleccion") }}',
+                data: data,
+                beforeSend: function (xhr) {
+                    $('#div_carga').show();
+                },
+                complete: function (jqXHR, textStatus) {
+                    $('#div_carga').hide();
+                },
+                success: function (data) {
+                    var $centro_recoleccion_selector = $('#programacion_form_centro_recoleccion');
+                    $centro_recoleccion_selector.html('<option>Escoja un centro de costo</option>');
+                    if (data.length === 0) {
+                        $centro_recoleccion_selector.parent().parent().addClass('has-error');
+                        var error = '<div class="help-block sonata-ba-field-error-messages"><ul><li>No hay un centro de costo asociado al cliente seleccionado</li></ul></div>';
+                        $centro_recoleccion_selector.parent().append(error);
+                    }else{
+                        $centro_recoleccion_selector.parent().parent().removeClass('has-error');
+                        $centro_recoleccion_selector.parent().find('div.help-block').eq(0).remove();
+                    }
+                    for (var i = 0, total = data.length; i < total; i++) {
+                        $centro_recoleccion_selector.append('<option value="' + data[i].id + '">' + data[i].name + '</option>');
+                    }
+                }
+            });
+            setGestores(data);
+        });
+        function setGestores(data) {
+            $.ajax({
+                type: 'post',
+                url: '{{ path("ajax_user_cliente") }}',
+                data: data,
+                beforeSend: function (xhr) {
+                    $('#div_carga').show();
+                },
+                complete: function (jqXHR, textStatus) {
+                    $('#div_carga').hide();
+                },
+                success: function (data) {
+                    var $gestor_selector = $('#programacion_form_gestor_ambiental');
+                    for (var i = 0, total = data.length; i < total; i++) {
+                        $gestor_selector.append('<option value="' + data[i].id + '">' + data[i].name + '</option>');
+                    }
+                }
+            });
+        }
+        $('#programacion_form_gestor_ambiental').change(function () {
+            $('input#programacion_form_gestor_ambiental').val($(this).val());
+        });
+        function setDensidad(selectChanged, id,seccion) {
+            var select = $(selectChanged);
+            var error = false;
+            select.parent().parent().parent().find('select.id_residuo[id!="'+select.attr('id')+'"]').each(function(){
+                if ($(this).val() && $(this).val() == select.val()) {
+                    swal('Usted ya escogio el residuo "'+select.find('option:selected').text()+'"');
+                    error = true;
+                }
+            });
+            if (error) {
+                select.val("");
+                return false;
+            }
+            var densidad = 0;
+            var jsonResiduos = select.parent().parent().parent().parent().parent().parent().parent().find('.json_residuos').eq(0).data('tipos');
+            $.each(jsonResiduos, function (k, v) {
+                if (select.val() == v.id) {
+                    densidad = v.densidad.toString().split('.').join(',');
+                }
+            });
+            select.parent().parent().find('input[name*="[densidad]"]').val(format(densidad));
+            calcularPeso(id,seccion);
+        }
+        $('form').submit(function (e) {
+            var error = false;
+            var numeroRecoleccion = null;
+            var numeroResiduo = null;
+            $('#nuevoTipoResiduo input, #nuevoTipoResiduo select').each(
+                    function () {
+                        var validar = true;
+                        var input = $(this);
+                        var attrValidate = input.attr('data-validate');
+                        var attrId = input.attr('id');
+                        if (input.attr('name') && input.attr('name').split('tipo_residuo_').length >1) {
+                            numeroResiduo = input.attr('name').split('tipo_residuo_')[1].split('[recoleccion]')[0];
+                        }
+                        if (typeof attrId !== typeof undefined && attrId !== false && attrId.split('tipo_transporte_').length > 1 && input.val() === "personalizado" && input.is(':checked')) {
+                            var recoleccionTemp = input.attr('name').split('[recoleccion][')[1].split(']')[0];
+                            if (recoleccionTemp !== numeroRecoleccion) {
+                                numeroRecoleccion = input.attr('name').split('[recoleccion][')[1].split(']')[0];
+                            }
+                        }
+                        if (numeroRecoleccion !== null && input.attr('name')) {
+                            var inputTipoTransporte = input.attr('name') === "tipo_residuo_"+numeroResiduo+"[recoleccion]["+numeroRecoleccion+"][id_tipo_transporte]";
+                            var inputVolumen = input.attr('name') === "tipo_residuo_"+numeroResiduo+"[recoleccion]["+numeroRecoleccion+"][volumen]";
+                            var inputCantidad = input.attr('name') === "tipo_residuo_"+numeroResiduo+"[recoleccion]["+numeroRecoleccion+"][cantidad]";
+                            var inputDensidad = input.attr('name').indexOf("tipo_residuo_"+numeroResiduo+"[recoleccion]["+numeroRecoleccion+"][residuos]") !== -1 && input.attr('name').indexOf("densidad") !== -1;
+                            if (
+                                    inputTipoTransporte ||
+                                    inputVolumen ||
+                                    inputCantidad ||
+                                    inputDensidad
+                                    ) {
+                                validar = false;
+                            }
+                        }
+                        if (validar) {
+                            if (typeof attrId !== typeof undefined && attrId !== false) {
+                                var has_s2id_autogen = input.attr('id').split('s2id_autogen');
+                            if (has_s2id_autogen.length < 2) {
+                                    if (typeof attrValidate === typeof undefined || attrValidate === false) {
+                                        if (input.val() == "") {
+                                            input.parent().addClass('has-error');
+                                            error = true;
+                                        } else {
+                                            input.parent().removeClass('has-error');
+                                        }
+                                    }
+                                }
+                            } else {
+                                if (typeof attrValidate === typeof undefined || attrValidate === false) {
+                                    if (input.val() == "") {
+                                        input.parent().addClass('has-error');
+                                        error = true;
+                                    } else {
+                                        input.parent().removeClass('has-error');
+                                    }
+                                }
+                            }
+                        }
+                    }
+            );
+            if ($('#programacion_form_gestor_ambiental').val() === "") {
+                $('#programacion_form_gestor_ambiental').parent().parent().addClass('has-error');
+                error = true;
+            }
+            if (error) {
+                var el = $("#nuevoTipoResiduo");
+                var elOffset = el.offset().top;
+                var elHeight = el.height();
+                var windowHeight = $(window).height();
+                var offset;
+                if (elHeight < windowHeight) {
+                    offset = elOffset - ((windowHeight / 2) - (elHeight / 2));
+                } else {
+                    offset = elOffset;
+                }
+                var speed = 700;
+                $('html, body').animate({scrollTop: offset}, speed);
+                return false;
+            }
+            $('#{{form.cliente.vars.id}}').removeAttr('disabled');
+        });
+</script>
+{% endblock %}

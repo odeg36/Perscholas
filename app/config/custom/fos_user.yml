@@ -1,0 +1,11 @@
+fos_user: 
+    #service:
+    #    mailer: wrep.fosuserbundlemandrillmailer
+    registration:
+        confirmation:
+            enabled: true
+    db_driver: orm
+    firewall_name: main
+    user_class: ModelBundle\Entity\User
+    group:
+        group_class: ModelBundle\Entity\Group

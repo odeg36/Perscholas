@@ -1,0 +1,10 @@
+<td id="" style="background-color:#{{value }};color:#FFFFFF">
+    <span id="{{value }}">
+    </span>
+</td>
+<script type="text/javascript">
+    {#$(function(){
+        $("#{{value}}").parent().parent().children().removeAttr("class");
+       $("#{{value}}").parent().parent().attr("style", 'background-color:#{{value}};');
+    });#}
+</script>

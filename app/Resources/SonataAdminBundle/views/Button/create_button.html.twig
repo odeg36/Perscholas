@@ -1,0 +1,16 @@
+{#
+
+This file is part of the Sonata package.
+
+(c) Thomas Rabaix <thomas.rabaix@sonata-project.org>
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+
+#}
+
+{% if admin.hasAccess('create') and admin.hasRoute('create') %}
+    <a class="sonata-action-element btn_agregar_nuevo" href="{{ admin.generateUrl('create') }}">
+        <img src="{{ asset("bundles/backend/images/agregar_nuevo.png") }}">
+    </a>
+{% endif %}

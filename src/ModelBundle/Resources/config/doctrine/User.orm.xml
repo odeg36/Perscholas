@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping 
+    xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd"
+    xmlns:gedmo="http://Atlantic18.github.io/DoctrineExtensions/schemas/orm/doctrine-extensions-3.0.xsd">
+    
+    <entity repository-class="ModelBundle\Entity\UserRepository" name="ModelBundle\Entity\User" table="usuario">
+        <id name="id" type="integer" column="id">
+            <generator strategy="IDENTITY"/>
+        </id>
+        
+        <field name="picture" type="text" column="picture" nullable="1"/>
+        <field name="age" type="integer" column="age" nullable="1"/>
+        <field name="direction" type="string" size="150" column="direction" nullable="1"/>
+        <field name="documentId" type="integer" column="document_id" unique="true"/>
+        <field name="es_kontrol_grun" type="boolean" column="es_kontrol_grun"/>
+        
+        <many-to-one field="cliente" target-entity="ModelBundle\Entity\Cliente" inversed-by="usuarios" orphan-removal="true">
+            <join-column name="cliente_id" referenced-column-name="id" on-delete="restrict" on-update="cascade" nullable="1"/>
+        </many-to-one>
+        
+        <one-to-many field="reportes" target-entity="ModelBundle\Entity\Reporte" mapped-by="usuario" orphan-removal="true">
+            <cascade>
+                <cascade-persist/>
+            </cascade>
+            <order-by>
+                <order-by-field name="id" direction="ASC" />
+            </order-by>
+        </one-to-many>
+        
+        <one-to-many field="alertas" target-entity="ModelBundle\Entity\Alerta" mapped-by="usuario" orphan-removal="true">
+            <cascade>
+                <cascade-persist/>
+            </cascade>
+            <order-by>
+                <order-by-field name="id" direction="ASC" />
+            </order-by>
+        </one-to-many>
+        
+        <one-to-many field="programaciones" target-entity="ModelBundle\Entity\Programacion" mapped-by="gestor_ambiental" orphan-removal="true">
+            <cascade>
+                <cascade-persist/>
+            </cascade>
+            <order-by>
+                <order-by-field name="id" direction="ASC" />
+            </order-by>
+        </one-to-many>
+        
+        <one-to-many field="capacitaciones" target-entity="ModelBundle\Entity\Capacitacion" mapped-by="gestor" orphan-removal="true">
+            <cascade>
+                <cascade-persist/>
+            </cascade>
+            <order-by>
+                <order-by-field name="id" direction="ASC" />
+            </order-by>
+        </one-to-many>
+        
+        <one-to-many field="soporteModificados" target-entity="ModelBundle\Entity\SoporteModificado" mapped-by="usuario" orphan-removal="true">
+            <cascade>
+                <cascade-persist/>
+            </cascade>
+            <order-by>
+                <order-by-field name="id" direction="ASC" />
+            </order-by>
+        </one-to-many>
+    </entity>
+</doctrine-mapping>

@@ -1,0 +1,147 @@
+{% block form %}
+    {{ sonata_block_render_event('sonata.admin.edit.form.top', { 'admin': admin, 'object': object }) }}
+
+    {% set url = admin.id(object) is not null ? 'edit' : 'create' %}
+
+    {% if not admin.hasRoute(url)%}
+        <div>
+            {{ "form_not_available"|trans({}, "SonataAdminBundle") }}
+        </div>
+    {% else %}
+        <form
+            {% if admin_pool.getOption('form_type') == 'horizontal' %}class="form-horizontal"{% endif %}
+            role="form"
+            action="{{ admin.generateUrl(url, {'id': admin.id(object), 'uniqid': admin.uniqid, 'subclass': app.request.get('subclass')}) }}" {{ form_enctype(form) }}
+            method="POST"
+            {% if not admin_pool.getOption('html5_validate') %}novalidate="novalidate"{% endif %}
+            >
+            {% if form.vars.errors|length > 0 %}
+                <div class="sonata-ba-form-error">
+                    {{ form_errors(form) }}
+                </div>
+            {% endif %}
+            <div class="box box-success">
+                <div class="box-header">
+                    <h3 class="box-title">
+                        Datos basicos
+                    </h3>
+                </div>
+                <div class="box-body">
+                    <div class="sonata-ba-collapsed-fields">
+                        <div class="form-group" id="sonata-ba-field-container-s57bdc5589c151_usuario">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    {{ form_row(form.cliente) }}
+                                    {{ form_row(form.centro_recoleccion) }}
+                                    {% for componente in componentes %}
+                                        <div class="col col-md-12">
+                                            <h4>{{componente.nombre}}</h4>
+                                            <hr style="border: 1px solid #77933C">
+                                            <div class="col col-md-4">
+                                                <h5><strong>Descripción</strong></h5>
+                                            </div>
+                                            <div class="col col-md-2">
+                                                <h5><strong>¿Cumple?</strong></h5>
+                                            </div>
+                                            <div class="col col-md-4">
+                                                <h5><strong>Observaciones</strong></h5>
+                                            </div>
+                                            {% for pregunta in componente.preguntasPMIRS %}
+                                                {% set cumple = null %} 
+                                                {% set observacion = null %} 
+                                                {% if object.id %}
+                                                    {% for preguntaSeguimiento in object.preguntas %}
+                                                        {% if pregunta.id == preguntaSeguimiento.pregunta.id %}
+                                                            {% set cumple = preguntaSeguimiento.cumple %} 
+                                                            {% set observacion = preguntaSeguimiento.observaciones %} 
+                                                        {% endif%}
+                                                    {% endfor%}
+                                                {% endif%}
+                                                <div class="col col-md-12 form-group">
+                                                    <div class="col col-md-4">
+                                                        {{pregunta.pregunta}}
+                                                    </div>
+                                                    <div class="col col-md-2">
+                                                        {% if cumple is not same as(null) %}
+                                                            {% if cumple %}
+                                                                <input type="radio" id="pregunta_{{pregunta.id}}_cumple" name="pregunta_{{pregunta.id}}[cumple]" required="required" value="1"  checked="checked" style="position: absolute; opacity: 0;"><label class="control-label margin-r-5" > Sí</label>
+                                                                <input type="radio" id="pregunta_{{pregunta.id}}_cumple" name="pregunta_{{pregunta.id}}[cumple]" required="required" value="0"  style="position: absolute; opacity: 0;"><label class="control-label"> No</label>
+                                                            {% else %}
+                                                                <input type="radio" id="pregunta_{{pregunta.id}}_cumple" name="pregunta_{{pregunta.id}}[cumple]" required="required" value="1"  style="position: absolute; opacity: 0;"><label class="control-label margin-r-5" > Sí</label>
+                                                                <input type="radio" id="pregunta_{{pregunta.id}}_cumple" name="pregunta_{{pregunta.id}}[cumple]" required="required" value="0" checked="checked" style="position: absolute; opacity: 0;"><label class="control-label"> No</label>
+                                                            {%endif%}
+                                                        {% else %}
+                                                            <input type="radio" id="pregunta_{{pregunta.id}}_cumple" name="pregunta_{{pregunta.id}}[cumple]" required="required" value="1"  style="position: absolute; opacity: 0;"><label class="control-label margin-r-5" > Sí</label>
+                                                            <input type="radio" id="pregunta_{{pregunta.id}}_cumple" name="pregunta_{{pregunta.id}}[cumple]" required="required" value="0" checked="checked" style="position: absolute; opacity: 0;"><label class="control-label"> No</label>
+                                                        {% endif %}
+                                                    </div>
+                                                    <div class="col col-md-6">
+                                                        {% if observacion is not same as(null) %}
+                                                            <textarea id="pregunta_{{pregunta.id}}_observacion" name="pregunta_{{pregunta.id}}[observacion]" class="form-control">{{observacion}}</textarea>
+                                                        {% else %}
+                                                            <textarea id="pregunta_{{pregunta.id}}_observacion" name="pregunta_{{pregunta.id}}[observacion]" class="form-control"></textarea>
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                            {% endfor%}
+                                        </div>
+                                    {% endfor%}
+                                    {{ form_row(form.cumple_seguimiento) }}
+                                    {{ form_row(form.fecha_ejecucion) }}
+                                    {{ form_row(form.atendio) }}
+                                    {{ form_row(form.elaboro) }}
+                                    {{ form_row(form.conclusiones) }}
+                                    {{ form_row(form.archivo) }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% block formactions %}
+                {% include "BackendBundle:Default:botones.html.twig" with {'object': object} %}
+            {% endblock formactions %}
+            {{ form_rest(form) }}
+        </form>
+    {% endif%}
+    {{ sonata_block_render_event('sonata.admin.edit.form.bottom', { 'admin': admin, 'object': object }) }}
+    <script type="text/javascript">
+
+        $("#seguimiento_cliente").on("change", function () {
+            var data = {
+                cliente_id: $(this).val()
+            };
+            $.ajax({
+                type: 'post',
+                url: '{{ path("ajax_centros_recoleccion") }}',
+                data: data,
+                beforeSend: function (xhr) {
+                    $('#div_carga').show();
+                },
+                complete: function (jqXHR, textStatus) {
+                    $('#div_carga').hide();
+                },
+                success: function (data) {
+                    var $centro_recoleccion_selector = $('#seguimiento_centro_recoleccion');
+                    $centro_recoleccion_selector.html('<option>Escoja un centro de costo</option>');
+                    if (data.length === 0) {
+                        $centro_recoleccion_selector.parent().parent().addClass('has-error');
+                        var error = '<div class="help-block sonata-ba-field-error-messages"><ul><li>No hay un centro de costo asociado al cliente seleccionado</li></ul></div>';
+                        $centro_recoleccion_selector.parent().append(error);
+                    } else {
+                        $centro_recoleccion_selector.parent().parent().removeClass('has-error');
+                        $centro_recoleccion_selector.parent().find('div.help-block').eq(0).remove();
+                    }
+                    for (var i = 0, total = data.length; i < total; i++) {
+                        $centro_recoleccion_selector.append('<option value="' + data[i].id + '">' + data[i].name + '</option>');
+                    }
+                }
+            });
+        });
+        
+        $('form').submit(function (e) {
+            $('#{{form.cliente.vars.id}}').removeAttr('disabled');
+        });
+    </script>
+    {{ sonata_block_render_event('sonata.admin.edit.form.bottom', { 'admin': admin, 'object': object }) }}
+{% endblock %}

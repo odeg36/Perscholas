@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping 
+    xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd"
+    xmlns:gedmo="http://gediminasm.org/schemas/orm/doctrine-extensions-mapping">
+    
+    <entity repository-class="ModelBundle\Entity\PreguntaPMIRSRepository" name="ModelBundle\Entity\PreguntaPMIRS" table="pregunta_pmirs">
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO"/>
+        </id>
+        <many-to-one field="componente" target-entity="ModelBundle\Entity\ComponentePMIRS" inversed-by="preguntas_PMIRS" orphan-removal="true">
+            <join-column name="componente_id" referenced-column-name="id" on-delete="restrict" on-update="cascade" nullable="0"/>
+        </many-to-one>
+        <field name="pregunta" type="string" column="nombre"/>
+        <one-to-many field="seguimientos" target-entity="ModelBundle\Entity\PreguntaSeguimiento" mapped-by="pregunta" />
+    </entity>
+</doctrine-mapping>

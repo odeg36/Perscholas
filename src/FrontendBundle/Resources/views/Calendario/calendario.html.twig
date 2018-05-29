@@ -1,0 +1,307 @@
+{% extends "::base.html.twig" %}
+
+{% block body %} 
+
+    {% include "FrontendBundle:Default:navbar.html.twig" %}
+
+    <!-- S U P E R  C O N T A I N E R -->
+    <main class="super-container-grun">
+
+        <div class="container-on-app-grun">
+            <!-- controller on app -->
+            <div class="col-xs-12 col-md-12 col-md-12 controller-on-app">
+                <div class="controller-on-app_left">
+                    {% if app.user.hasRole('ROLE_SONATA_ADMIN')%}
+                        <select id="id_cliente" class="form-control">
+                            <option value="">Seleccionar cliente </option>
+                            {% for cliente in clientes %}
+                                <option value="{{ cliente.id}}">{{ cliente.nombre}}</option>
+                            {% endfor %}
+                        </select>
+                    {%endif %}
+                    <select id="id_centro" class="form-control">
+                        <option value="">Seleccionar centro de costo </option>
+                        {% for centro in centros %}
+                            <option value="{{ centro.id}}">{{ centro.nombre}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <!-- help grun -->
+            <section class="margins-on-app calendar_grun">
+                <div class="sorting-residue">
+                    <h5>Tipos de residuos</h5>
+                    <ul>
+                        <!--reciclable-->
+                        <li>
+                            <div class="dropdown">
+                                <a class="dropdown-toggle" id="reciclables_dd" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                    <span>
+                                        <img src="{{asset("bundles/frontend/images/residuos/reciclable_icono.svg") }}" alt="description" width="65">
+                                    </span>
+                                    <p>Reciclables</p>
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="reciclables_dd">
+                                    <li>
+                                        <span><img src="{{asset("bundles/frontend/images/residuos/reciclables.png") }}" alt="description"></span>
+                                        <p>Cualquier material, objeto, sustancia o elemento que se puede incorporar nuevamente a un proceso productivo, papel, cartón, plástico, vidrio, chatarra,  metales, pasta, Tetrapack, aceites usados de cocina.</p>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                        <!--no reciclable-->
+                        <li>
+                            <div class="dropdown">
+                                <a class="dropdown-toggle" id="no_reciclables_dd" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                    <span>
+                                        <img src="{{asset("bundles/frontend/images/residuos/no-reciclable_icono.svg") }}" alt="description" width="65">
+                                    </span>
+                                    <p>No reciclables</p>
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="no_reciclables_dd">
+                                    <li>
+                                        <span><img src="{{asset("bundles/frontend/images/residuos/no_reciclables.png") }}" alt="description"></span>
+                                        <p>Todo material o sustancia que no ofrece ninguna posibilidad de aprovechamiento, papel aluminio, pañales, espejos quebrados, barrido de la casa, papel higiénico, huesos y losa.</p>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                        <!--organicos-->
+                        <li>
+                            <div class="dropdown">
+                                <a class="dropdown-toggle" id="organicos_dd" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                    <span>
+                                        <img src="{{asset("bundles/frontend/images/residuos/organicos_icono.svg") }}" alt="description" width="65">
+                                    </span>
+                                    <p>Orgánicos</p>
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="organicos_dd">
+                                    <li>
+                                        <span><img src="{{asset("bundles/frontend/images/residuos/organicos.png") }}" alt="description"></span>
+                                        <p>Son aquellos que tienen la característica de poder desintegrarse o degradarse rápidamente, transformándose en otro tipo de materia orgánica. Corte de césped, podas y jardines, residuos de frutas y verduras.</p>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li><!--peligrosos-->
+                        <li>
+                            <div class="dropdown">
+                                <a class="dropdown-toggle" id="peligrosos_dd" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                    <span>
+                                        <img src="{{asset("bundles/frontend/images/residuos/peligrosos_icono.svg") }}" alt="description" width="65">
+                                    </span>
+                                    <p>Peligrosos</p>
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="peligrosos_dd">
+                                    <li>
+                                        <span><img src="{{asset("bundles/frontend/images/residuos/peligrosos.png") }}" alt="description"></span>
+                                        <p>Son aquellos residuos o desechos que por su característica o composición puede causar riesgo a la salud humana y el ambiente. Baterías y Pilas, medicamentos vencidos, luminarias, envases contaminados.</p>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                        <!--especiales-->
+                        <li>
+                            <div class="dropdown">
+                                <a class="dropdown-toggle" id="especiales_dd" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                    <span>
+                                        <img src="{{asset("bundles/frontend/images/residuos/especiales_icono.svg") }}" alt="description" width="65">
+                                    </span>
+                                    <p>Especiales</p>
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="especiales_dd">
+                                    <li>
+                                        <span><img src="{{asset("bundles/frontend/images/residuos/especiales.png") }}" alt="description"></span>
+                                        <p>Residuos sólidos que por su calidad, cantidad, magnitud, volumen o peso pueden presentar peligros.  Colchones, escombros, llantas, podas.</p>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                        <!--electrónicos-->
+                        <li>
+                            <div class="dropdown">
+                                <a class="dropdown-toggle" id="electronicos_dd" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                    <span>
+                                        <img src="{{asset("bundles/frontend/images/residuos/electronicos_icono.svg") }}" alt="description" width="65">
+                                    </span>
+                                    <p>RAEE</p>
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="electronicos_dd">
+                                    <li>
+                                        <span><img src="{{asset("bundles/frontend/images/residuos/raee.png") }}" alt="description"></span>
+                                        <p>Residuos eléctricos o electrónicos, neveras, hornos microondas, celulares, televisores, computadores.</p>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                        <!--riesgo biológico-->
+                        <li>
+                            <div class="dropdown">
+                                <a class="dropdown-toggle" id="r_biologico_dd" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                    <span>
+                                        <img src="{{asset("bundles/frontend/images/residuos/riesgo-biologico_icono.svg") }}" alt="description" width="65">
+                                    </span>
+                                    <p>Riesgo Biológico</p>
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="r_biologico_dd">
+                                    <li>
+                                        <span><img src="{{asset("bundles/frontend/images/residuos/biologico.png") }}" alt="description"></span>
+                                        <p>Es aquel que por sus características infecciosas pueden causar riesgo a la salud humana o deteriorar la calidad del ambiente. Biosanitarios, anatomapatológicos, cortopunsantes.</p>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                        <!--rcd-->
+                        <li>
+                            <div class="dropdown">
+                                <a class="dropdown-toggle" id="rcd_dd" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                    <span>
+                                        <img src="{{asset("bundles/frontend/images/residuos/rcd_icono.svg") }}" alt="description" width="65">
+                                    </span>
+                                    <p>RCD</p>
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="rcd_dd">
+                                    <li>
+                                        <span><img src="{{asset("bundles/frontend/images/residuos/rcd.png") }}" alt="description"></span>
+                                        <p>Residuos de Construcción y Demolición, generados en  obras de excavación, nueva construcción, reparación y demolición de una construcción.</p>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>                </div>
+                <div class="container-calendar_grun" style="display: none">
+                    <!--header calendar-->
+                    <div class="header-calendar_grun">
+                        <div class="btn-group header-calendar_grun_left page-header" role="group" aria-label="...">
+                            <button type="button" class="btn btn-primary" data-calendar-nav="prev"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span></button>
+                            <h3>Agosto año 2016</h3>
+                            <button type="button" class="btn btn-primary" data-calendar-nav="next"><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></button>
+                        </div>
+                        <div class="btn-group header-calendar_grun_right" role="group" aria-label="...">
+                            <button type="button" class="btn btn-warning active" data-calendar-view="month">Mes</button>
+                            <button type="button" class="btn" data-calendar-nav="today">Hoy</button>
+                        </div>
+                    </div>
+                    <!--calendar-->
+                    <div class="calendario_grun">
+
+                    </div>
+                </div>
+                <div class="calendario_grun" id="calendar"></div>
+            </section>
+        </div>
+
+    </main>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        $("#id_cliente").change(function () {
+            var data = {
+                cliente_id: $(this).val()
+            };
+            $.ajax({
+                type: 'post',
+                url: '{{ path("ajax_centros_recoleccion") }}',
+                data: data,
+                beforeSend: function (xhr) {
+                    $('#div_carga').show();
+                },
+                complete: function (jqXHR, textStatus) {
+                    $('#div_carga').hide();
+                },
+                success: function (data) {
+                    var $centro_recoleccion_selector = $('#id_centro');
+                    $centro_recoleccion_selector.html('<option val="">Seleccionar centro de costo</option>');
+                    for (var i = 0, total = data.length; i < total; i++) {
+                        $centro_recoleccion_selector.append('<option value="' + data[i].id + '">' + data[i].name + '</option>');
+                    }
+                }
+            });
+        });
+        (function ($) {
+            "use strict";
+            $("#id_centro").on("change", function () {
+                var centro = $(this).val();
+                var options = {
+                    language: 'es-CO',
+                    events_source: 'calendario_recogidas/' + centro,
+                    view: 'month',
+                    tmpl_path: '/bundles/frontend/calendario/tmpls/',
+                    tmpl_cache: false,
+                    onAfterEventsLoad: function (events) {
+                        $('.container-calendar_grun').show();
+                        if (!events) {
+                            return;
+                        }
+                        var list = $('#eventlist');
+                        list.html('');
+
+                        $.each(events, function (key, val) {
+                            $(document.createElement('li'))
+                                    .html('<a href="' + val.url + '">' + val.title + '</a>')
+                                    .appendTo(list);
+                        });
+                    },
+                    onAfterViewLoad: function (view) {
+                        $('.page-header h3').text(this.getTitle());
+                        $('.btn-group button').removeClass('active');
+                        $('button[data-calendar-view="' + view + '"]').addClass('active');
+                    },
+                    classes: {
+                        months: {
+                            general: 'label'
+                        }
+                    }
+                };
+
+                var calendar = $('#calendar').calendar(options);
+
+                $('.btn-group button[data-calendar-nav]').each(function () {
+                    var $this = $(this);
+                    $this.click(function () {
+                        calendar.navigate($this.data('calendar-nav'));
+                    });
+                });
+
+                $('.btn-group button[data-calendar-view]').each(function () {
+                    var $this = $(this);
+                    $this.click(function () {
+                        calendar.view($this.data('calendar-view'));
+                    });
+                });
+
+                $('#first_day').change(function () {
+                    var value = $(this).val();
+                    value = value.length ? parseInt(value) : null;
+                    calendar.setOptions({first_day: value});
+                    calendar.view();
+                });
+
+                $('#language').change(function () {
+                    calendar.setLanguage($(this).val());
+                    calendar.view();
+                });
+
+                $('#events-in-modal').change(function () {
+                    var val = $(this).is(':checked') ? $(this).val() : null;
+                    calendar.setOptions({modal: val});
+                });
+                $('#format-12-hours').change(function () {
+                    var val = $(this).is(':checked') ? true : false;
+                    calendar.setOptions({format12: val});
+                    calendar.view();
+                });
+                $('#show_wbn').change(function () {
+                    var val = $(this).is(':checked') ? true : false;
+                    calendar.setOptions({display_week_numbers: val});
+                    calendar.view();
+                });
+                $('#show_wb').change(function () {
+                    var val = $(this).is(':checked') ? true : false;
+                    calendar.setOptions({weekbox: val});
+                    calendar.view();
+                });
+            });
+        }(jQuery));
+    </script>
+{% endblock %}

@@ -1,0 +1,35 @@
+backend_homepage:
+    path:     /hello/{name}
+    defaults: { _controller: BackendBundle:Default:index }
+    
+ajax_centros_recoleccion:
+    path:     /ajax/centros_recoleccion
+    defaults: { _controller: BackendBundle:Ajax:centrosRecoleccion }
+    
+ajax_departamentos:
+    pattern:  /ajax/departamentos
+    defaults: { _controller: BackendBundle:Ajax:listaDepartamentos }
+    
+ajax_municipios:
+    pattern:  /ajax/municipios
+    defaults: { _controller: BackendBundle:Ajax:listaMunicipios }
+    
+ajax_zonas:
+    pattern:  /ajax/zonas
+    defaults: { _controller: BackendBundle:Ajax:listaZonas }
+    
+ajax_user_cliente:
+    path:     /ajax/user-cliente
+    defaults: { _controller: BackendBundle:Ajax:userCliente }
+    
+ajax_residuos:
+    path:     /ajax/residuos
+    defaults: { _controller: BackendBundle:Ajax:residuos }
+    
+ajax_tipo_transporte:
+    path:     /ajax/tipo-transporte
+    defaults: { _controller: BackendBundle:Ajax:tipoTransporte }
+    
+ajax_alertas:
+    path:     /ajax/alertas
+    defaults: { _controller: BackendBundle:Ajax:alertas }

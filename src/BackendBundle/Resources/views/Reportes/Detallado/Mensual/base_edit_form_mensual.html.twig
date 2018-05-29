@@ -1,0 +1,84 @@
+<form
+    {% if admin_pool.getOption('form_type') == 'horizontal' %}class="form-horizontal"{% endif %}
+    id="form_mensual"
+    role="form"
+    action="{{ admin.generateUrl(url, {'id': admin.id(object), 'uniqid': admin.uniqid, 'subclass': app.request.get('subclass')}) }}" {{ form_enctype(formFechas) }}
+    method="POST"
+    {% if not admin_pool.getOption('html5_validate') %}novalidate="novalidate"{% endif %}
+    >
+    {% if formFechas.vars.errors|length > 0 %}
+        <div class="sonata-ba-form-error">
+            {{ form_errors(formFechas) }}
+        </div>
+    {% endif %}
+    <div class="box box-success">
+        <div class="box-header">
+            <h4 class="box-title">
+                Reporte mensual de tipos de residuos y su peso en Kg
+            </h4>
+        </div>
+        <div class="box-body">
+            <div class="sonata-ba-collapsed-fields">
+                <div class="form-group" id="sonata-ba-field-container-s57bdc5589c151_usuario">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class=" sonata-ba-field">
+                                {{form_row(formFechas.fecha_inicial)}}
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class=" sonata-ba-field">
+                                {{form_row(formFechas.fecha_final)}}
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class=" sonata-ba-field">
+                                {{form_row(formFechas.tipos_residuos)}}
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class=" sonata-ba-field">
+                                {{form_row(formFechas.cliente)}}
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class=" sonata-ba-field">
+                                <button class="btn btn-primary" type="submit" name="generar" value="true" style="margin-top: 5%;"><i class="fa fa-signal"></i> Generar</button>
+                                <button class="btn btn-danger" type="submit" name="pdf" value="true" style="margin-top: 5%;" disabled><i class="fa fa-file-pdf-o"></i> PDF</button>
+                                <button class="btn btn-success" type="submit" name="excel" value="true" style="margin-top: 5%;" disabled><i class="fa fa-file-excel-o"></i> Excel</button>
+                                <a class="btn btn-default" name="restablecer" style="margin-top: 5%;" onclick="resetForm(this);">Restablecer</a>
+                            </div>
+                        </div>
+                        <div id="graficaFechas">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{ form_rest(formFechas) }}
+</form>
+<script>
+    $('#form_mensual').submit(function () {
+        var $btn = $(document.activeElement);
+    {% if is_granted('ROLE_GESTOR') %}
+                $('#{{formFechas.cliente.vars.id}}').removeAttr('disabled');
+    {% endif %}
+        if (
+                /* there is an activeElement at all */
+                $btn.length &&
+                /* it's a child of the form */
+                $(this).has($btn) &&
+                /* it's really a submit element */
+                $btn.is('button[type="submit"], input[type="submit"], input[type="image"]') &&
+                /* it has a "name" attribute */
+                $btn.is('[name]') &&
+                ($btn.attr('name') == "pdf" || $btn.attr('name') == "excel")
+                ) {
+        } else {
+            options.target = '#graficaFechas';
+            $('#form_mensual').ajaxSubmit(options);
+            return false;
+        }
+    });
+</script>

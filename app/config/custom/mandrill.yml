@@ -1,0 +1,5 @@
+hip_mandrill:
+   api_key: sqKS0ePjNI3YOoTnsvViAA
+   default:
+       sender: %mailer_user%
+       sender_name: %project_name%

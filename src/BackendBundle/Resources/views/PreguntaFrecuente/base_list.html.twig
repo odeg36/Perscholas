@@ -1,0 +1,40 @@
+{#
+
+This file is part of the Sonata package.
+
+(c) Thomas Rabaix <thomas.rabaix@sonata-project.org>
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+
+#}
+
+{% extends base_template %}
+
+
+{% block sonata_page_content_nav %}
+{% endblock %}
+{% block list_table %}
+    <div class="col-xs-12 col-md-12">
+        {# Add a margin if no pager to prevent dropdown cropping on window #}
+        <div class="box box-primary">
+            <div class="box-body table-responsive no-padding">
+                <div class="panel-group" id="accordion">
+                    {% for key , pregunta in preguntas %}
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapse{{key}}">
+                                        {{pregunta.pregunta}}</a>
+                                </h4>
+                            </div>
+                            <div id="collapse{{key}}" class="panel-collapse collapse">
+                                <div class="panel-body">{{pregunta.respuesta}}</div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,123 @@
+<script>
+    // wait for the DOM to be loaded 
+    var options = {
+        beforeSubmit: beforeSubmit, // pre-submit callback 
+        error: showError,
+        success: succes
+    };
+    function beforeSubmit(formData, jqForm, options) {
+        $('#div_carga').show();
+    }
+    function succes(responseText, statusText, xhr, $form) {
+        $('#div_carga').hide();
+    }
+    function showError() {
+        $('#div_carga').hide();
+        swal({
+            title: "Ocurrio un error",
+            type: "warning",
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Aceptar"
+        });
+    }
+    function resetForm(button) {
+        var resetButton = $(button);
+        var form = resetButton.parents('form').eq(0);
+        $(form).find('input[id*="r_detallado_"],select[id*="r_detallado_"]').each(function (k, v) {
+            if ($(this).attr('id').split('token').length < 2) {
+                if ($(this).data('select2')) {
+                    $(this).select2("val", "");
+                } else {
+                    $(this).val('');
+                }
+            }
+        });
+        $(form).ajaxSubmit(options);
+    }
+</script> 
+
+
+{% set url = 'frontend_reporte_economico' %}
+
+<form
+    class="form-horizontal"
+    id="form_economico"
+    role="form"
+    action="{{ path(url) }}"
+    method="POST"
+    >
+    {% if form.vars.errors|length > 0 %}
+        <div class="sonata-ba-form-error">
+            {{ form_errors(form) }}
+        </div>
+    {% endif %}
+    <div class="box box-success">
+        <div class="box-header">
+            <h4 class="box-title">
+                Reporte ecónomico
+            </h4>
+        </div>
+        <div class="box-body">
+            <div class="sonata-ba-collapsed-fields">
+                <div class="form-group" id="sonata-ba-field-container-s57bdc5589c151_usuario">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class=" sonata-ba-field">
+                                {{form_row(form.fecha_inicial)}}
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class=" sonata-ba-field">
+                                {{form_row(form.fecha_final)}}
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class=" sonata-ba-field">
+                                {{form_row(form.tipos_residuos)}}
+                            </div>
+                        </div>
+                        <div style="display: none">
+                            <div >
+                                <div class=" sonata-ba-field">
+                                    {{form_row(form.cliente)}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class=" sonata-ba-field">
+                                <button class="btn btn-primary" type="submit" name="generar" value="true" style="margin-top: 5%;"><i class="fa fa-signal"></i> Generar</button>
+                                <button class="btn btn-danger" type="submit" name="pdf" value="true" style="margin-top: 5%;" disabled><i class="fa fa-file-pdf-o"></i> PDF</button>
+                                <button class="btn btn-success" type="submit" name="excel" value="true" style="margin-top: 5%;" disabled><i class="fa fa-file-excel-o"></i> Excel</button>
+                                <a class="btn btn-default" name="restablecer" style="margin-top: 5%;" onclick="resetForm(this);">Restablecer</a>
+                            </div>
+                        </div>
+                        <div id="graficaEconomico">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{ form_rest(form) }}
+</form>
+<script>
+    $('#form_economico').submit(function () {
+        var $btn = $(document.activeElement);
+        if (
+                /* there is an activeElement at all */
+                $btn.length &&
+                /* it's a child of the form */
+                $(this).has($btn) &&
+                /* it's really a submit element */
+                $btn.is('button[type="submit"], input[type="submit"], input[type="image"]') &&
+                /* it has a "name" attribute */
+                $btn.is('[name]') &&
+                ($btn.attr('name') == "pdf" || $btn.attr('name') == "excel")
+                ) {
+        } else {
+            options.target = '#graficaEconomico';
+            $('#form_economico').ajaxSubmit(options);
+            return false;
+        }
+    });
+</script>

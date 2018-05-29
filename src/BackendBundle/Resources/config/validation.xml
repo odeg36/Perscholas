@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<constraint-mapping
+    xmlns="http://symfony.com/schema/dic/constraint-mapping"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping
+        http://symfony.com/schema/dic/services/constraint-mapping-1.0.xsd">
+
+    <class name="ModelBundle\Entity\User">
+        <property name="firstname">
+            <constraint name="NotNull" />
+            <constraint name="NotBlank" />
+        </property>
+        <property name="email">
+            <constraint name="NotNull" />
+            <constraint name="NotBlank" />
+        </property>
+        <property name="documentId">
+            <constraint name="NotNull" />
+            <constraint name="NotBlank" />
+        </property>
+        <property name="roles">
+            <constraint name="NotNull" />
+            <constraint name="NotBlank"/>
+        </property>
+        <constraint name="Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity">
+            <option name="fields">email</option>
+        </constraint>
+        <constraint name="Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity">
+            <option name="fields">documentId</option>
+        </constraint>
+    </class>
+    
+    <class name="ModelBundle\Entity\Cliente">
+        <property name="nombre">
+            <constraint name="NotNull" />
+        </property>
+        <property name="nit">
+            <constraint name="NotNull" />
+        </property>
+        <property name="correo_electronico">
+            <constraint name="NotNull" />
+        </property>
+        <property name="tipoCliente">
+            <constraint name="NotNull" />
+        </property>
+        <property name="direccion">
+            <constraint name="NotNull" />
+        </property>
+        <property name="telefono">
+            <constraint name="NotNull" />
+        </property>
+    </class>
+    
+    <class name="ModelBundle\Entity\Sede">
+        <property name="nombre">
+            <constraint name="NotNull" />
+            <constraint name="NotBlank" />
+        </property>
+        <property name="direccion">
+            <constraint name="NotNull" />
+            <constraint name="NotBlank" />
+        </property>
+        <property name="telefono">
+            <constraint name="NotNull" />
+            <constraint name="NotBlank" />
+        </property>
+        <property name="nombreContacto">
+            <constraint name="NotNull" />
+            <constraint name="NotBlank" />
+        </property>
+        <property name="cargoContacto">
+            <constraint name="NotNull" />
+            <constraint name="NotBlank" />
+        </property>
+        <property name="departamento">
+            <constraint name="NotNull" />
+            <constraint name="NotBlank" />
+        </property>
+        <property name="municipio">
+            <constraint name="NotNull" />
+            <constraint name="NotBlank" />
+        </property>
+    </class>
+    
+    <class name="ModelBundle\Entity\Disposicion">
+        <property name="nombre">
+            <constraint name="NotNull" />
+        </property>
+    </class>
+    
+    <class name="ModelBundle\Entity\Alerta">
+        <property name="eventoAsosciado">
+            <constraint name="NotNull" />
+        </property>
+        <property name="estado">
+            <constraint name="NotNull" />
+        </property>
+    </class>
+    
+    <class name="ModelBundle\Entity\TarifaDescuento">
+        <property name="nombre">
+            <constraint name="NotNull" />
+        </property>
+        <property name="precioMaterial">
+            <constraint name="NotNull" />
+        </property>
+        <property name="minimo">
+            <constraint name="NotNull" />
+        </property>
+        <property name="maximo">
+            <constraint name="NotNull" />
+        </property>
+        <property name="descuento">
+            <constraint name="NotNull" />
+        </property>
+        <property name="fechaInicio">
+            <constraint name="NotNull" />
+        </property>
+        <property name="fechaFinal">
+            <constraint name="NotNull" />
+        </property>
+    </class>
+</constraint-mapping>

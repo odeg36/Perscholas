@@ -1,0 +1,34 @@
+{#
+
+This file is part of the Sonata package.
+
+(c) Thomas Rabaix <thomas.rabaix@sonata-project.org>
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+
+#}
+
+{% extends 'SonataAdminBundle:CRUD:base_show_field.html.twig' %}
+
+{% block field %}
+{% spaceless %}
+    {% if value %}
+        {% if object.archivoCapacitacion %}
+            {% if object.evidenciaFotografica %}
+                {% if object.evidenciaFotografica|slice(-4) in ['.png', '.jpg', '.gif', '.bmp', '.tiff', '.jpeg'] %}
+                <a href="{{ object.evidenciaFotografica }}" target="_blank" class="imagen"> 
+                    Ver archivo
+                </a>
+                {% else %}
+                <a href="{{ object.evidenciaFotografica }}" target="_blank" class="popup_documento">
+                    Ver archivo
+                </a>
+                {% endif %}
+            {% endif %}
+        {% endif %}
+    {% else %}
+        <span class="label label-danger">No se cargó archivo.</span>
+    {% endif %}
+{% endspaceless %}
+{% endblock %}

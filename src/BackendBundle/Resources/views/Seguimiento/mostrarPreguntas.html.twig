@@ -1,0 +1,21 @@
+{% extends 'SonataAdminBundle:CRUD:base_show_field.html.twig' %}
+
+{% block field %}
+    {% if object.preguntas | length > 0 %}
+        {% set categoria = "" %}
+        {% for pregunta in object.preguntas %}
+            <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 ">
+                {% if categoria == "" or categoria != pregunta.pregunta.componente.nombre %}
+                    {% set categoria = pregunta.pregunta.componente.nombre %}
+                    <h4>{{categoria}}</h4>
+                {% endif %}
+                <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6 ">
+                    {{pregunta.pregunta}}
+                </div>
+                <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6 ">
+                    {{pregunta.cumple ? 'Si':'No'}}
+                </div>
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endblock %}

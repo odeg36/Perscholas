@@ -1,0 +1,109 @@
+{#
+
+This file is part of the Sonata package.
+
+(c) Thomas Rabaix <thomas.rabaix@sonata-project.org>
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+
+#}
+
+{% extends "::base.html.twig" %}
+
+
+{% block body %} 
+
+    {% include "FrontendBundle:Default:navbar.html.twig" %}
+
+    <!-- S U P E R  C O N T A I N E R -->
+    <main class="super-container-grun">
+
+        <div class="container-on-app-grun">
+            <!-- controller on app -->
+            <div class="col-xs-12 col-md-12 col-md-12 controller-on-app">
+
+                <div class="controller-on-app_left">
+
+                </div>
+
+                <div class="controller-on-app_right">
+                    {#<form action="">
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="Search for...">
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" type="button">Go!</button>
+                            </span>
+                        </div>
+                    </form>#}
+                </div>
+            </div>
+
+            <section class="margins-on-app help-grun">
+                <script>
+                    // wait for the DOM to be loaded 
+                    var options = {
+                        beforeSubmit: beforeSubmit, // pre-submit callback 
+                        error: showError,
+                        success: succes
+                    };
+                    function beforeSubmit(formData, jqForm, options) {
+                        $('#div_carga').show();
+                    }
+                    function succes(responseText, statusText, xhr, $form) {
+                        $('#div_carga').hide();
+                    }
+                    function showError() {
+                        $('#div_carga').hide();
+                        swal({
+                            title: "Ocurrio un error",
+                            type: "warning",
+                            confirmButtonColor: "#DD6B55",
+                            confirmButtonText: "Aceptar"
+                        });
+                    }
+                    function resetForm(button) {
+                        var resetButton = $(button);
+                        var form = resetButton.parents('form').eq(0);
+                        $(form).find('input[id*="r_detallado_"],select[id*="r_detallado_"]').each(function (k, v) {
+                            if ($(this).attr('id').split('token').length < 2) {
+                                if ($(this).data('select2')) {
+                                    $(this).select2("val", "");
+                                } else {
+                                    $(this).val('');
+                                }
+                            }
+                        });
+                        $(form).ajaxSubmit(options);
+                    }
+                </script> 
+
+
+                <ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
+                    <li class="active"><a href="#tabTiposResiduos" data-toggle="tab">Cantidad recolectada de residuos por categoría</a></li>
+                    <li><a href="#mensual" data-toggle="tab">Reporte mensual de cantidad recolectada</a></li>
+                    <li><a href="#aprovechables" data-toggle="tab">Residuos Aprovechables vs No Aprovechables</a></li>
+                    <li><a href="#tabGestor" data-toggle="tab">Residuos recolectados por gestor ambiental</a></li>
+                    <li><a href="#totalTipo" data-toggle="tab">Cantidad total recolectada por categoría</a></li>
+                </ul>
+                <div id="my-tab-content" class="tab-content">
+                    <div class="tab-pane active" id="tabTiposResiduos">
+                        {%include 'FrontendBundle:Reportes:Detallado/Tipos/base_edit_form_tipos.html.twig'%}
+                    </div>
+                    <div class="tab-pane" id="mensual">
+                        {%include 'FrontendBundle:Reportes:Detallado/Mensual/base_edit_form_mensual.html.twig'%}
+                    </div>
+                    <div class="tab-pane" id="aprovechables">
+                        {%include 'FrontendBundle:Reportes:Detallado/Aprovechables/base_edit_form_aprovechables.html.twig'%}
+                    </div>
+                    <div class="tab-pane" id="tabGestor">
+                        {%include 'FrontendBundle:Reportes:Detallado/Gestor/base_edit_form_gestor.html.twig'%}
+                    </div>
+                    <div class="tab-pane" id="totalTipo">
+                        {%include 'FrontendBundle:Reportes:Detallado/TotalTipos/base_edit_form_total.html.twig'%}
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+{% endblock %}

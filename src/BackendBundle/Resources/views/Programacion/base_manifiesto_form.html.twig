@@ -1,0 +1,306 @@
+{% if object.id %}
+    {% for key , tipo_residuo in object.tiposResiduosTransporte %}
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#collapse{{ key }}">
+                        <span class="fa fa-edit"></span> {{tipo_residuo.tipoResiduo}}
+                        {% if tipo_residuo.validado == false and copia is not defined%}
+                            <i class="fa fa-warning" style="color:red" data-toggle="tooltip" data-placement="top" title="No ha subido el certificado de disposición"></i>
+                        {% endif %}
+                    </a>
+                    <span class="fa fa-remove pointer-red" style="float:right;" onclick="eliminarSeccion(this)"></span>
+                </h4>
+            </div>
+            <div id="collapse{{ key }}" class="panel-collapse collapse">
+                <div class="panel-body">
+                    <div class="contenido-tipo-residuo">
+                        <div class="col-md-12">
+                            <label class="control-label " for="tipo_residuo_{{key}}">Tipo de residuo</label>
+                            <select id="tipo_residuo_{{key}}" name="tipo_residuo_{{key}}[id]" data-validate="false" onchange="definirTransporte(this,{{key}} )" data-validate="No" class="id_tipo_residuo">
+                                <option value="" >Seleccione un tipo de residuo</option>
+                                {%set tipoSeleccionado = null %}
+                                {% for tipo in tipos_residuos %}
+                                    {% if tipo.id == tipo_residuo.tipoResiduo.id %}
+                                        {%set tipoSeleccionado = tipo_residuo.tipoResiduo %}
+                                    {% endif%}
+                                    <option value="{{tipo.id}}" {{tipo.id == tipo_residuo.tipoResiduo.id?"selected":""}}>{{tipo.nombre}}</option>
+                                {% endfor%}
+                            </select>
+                        </div>
+                    </div>
+                    <div id="anexo_{{key}}" class="col-md-12">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="form-group">
+                                    <div class="col-md-12">
+                                        <div id="recoleccion_{{key}}" class="col-md-12">
+                                            {% set numero_residuo = 1 %}
+                                            {% for keyR,recoleccion in tipo_residuo.recolecciones %}
+                                                <section class="col-md-12" id="recoleccion_numero_{{keyR}}">
+                                                    <div style="float:left;left: 20px;top: 15px;position: absolute;" onclick="eliminarRecoleccion(this)"><i class="fa fa-remove pointer-red"></i></div>
+                                                    <div class="col-md-6">
+                                                        <label class="control-label required" for="tipo_transporte_{{key}}_fecha_programacion">Fecha de programación</label>
+                                                        <input value="{{recoleccion.fechaProgramacion|date('d-m-Y')}}" type="text" id="tipo_residuo_{{key}}_recoleccion_{{keyR}}_fecha_programacion" name="tipo_residuo_{{key}}[recoleccion][{{keyR}}][fecha_programacion]" required="required" class="datepicker form-control" data-provide="datepicker" data-date-format="dd-mm-yyyy">
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label class="control-label required" for="tipo_transporte_{{key}}_fecha_recoleccion">Fecha de ejecución recolectada</label>
+                                                        <input value="{{recoleccion.fechaRecoleccionEjecutada|date('d-m-Y')}}" type="text" id="tipo_residuo_{{key}}_recoleccion_{{keyR}}_fecha_recoleccion" name="tipo_residuo_{{key}}[recoleccion][{{keyR}}][fecha_recoleccion]" required="required" class="datepicker form-control" data-provide="datepicker" data-date-format="dd-mm-yyyy">
+                                                    </div>
+                                                    <script>
+                                                        $('#tipo_residuo_{{key}}_recoleccion_{{keyR}}_fecha_recoleccion').datepicker({
+                                                        dateFormat: "dd-mm-yy",
+                                                                onSelect: function(dateText) {
+                                                                $('#fecha_recoleccion_{{key}}').text(dateText);
+                                                                }
+                                                        });
+                                                        $('#tipo_residuo_{{key}}_recoleccion_{{keyR}}_fecha_programacion').datepicker({
+                                                        dateFormat: "dd-mm-yy",
+                                                                onSelect: function(dateText) {
+                                                                var campoFechaRecoleccion = $(this).parent().next().children('input').eq(0);
+                                                                campoFechaRecoleccion.datepicker('setDate', dateText);
+                                                                $('#fecha_recoleccion_{{key}}').text(dateText);
+                                                                }
+                                                        });
+                                                    </script>
+                                                    {% if tipo_residuo.tipoResiduo.usaVolqueta and tipo_residuo.tipoResiduo.usaContenedor %}
+                                                        <div class="col-md-12">
+                                                            <br>
+                                                            <input {{ recoleccion.recoleccionContenedor? 'checked':''}} type="radio" class="form-control" id="tipo_transporte_{{ key }}_contenedor" name="tipo_residuo_{{ key }}[recoleccion][{{ keyR }}][tipo_transporte]" value="contenedor" onClick="poblarTipoTransporte(this, {{ key }});"> 
+                                                            <label class="control-label" for="tipo_transporte_' + contador + '_contenedor"> Contenedor </label>
+                                                            <input {{ recoleccion.recoleccionVolqueta? 'checked':''}} type="radio" id="tipo_transporte_{{ key }}_volqueta" name="tipo_residuo_{{ key }}[recoleccion][{{ keyR }}][tipo_transporte]" value="volqueta" onClick="poblarTipoTransporte(this,{{ key }} );"> 
+                                                            <label class="control-label" for="tipo_transporte_' + contador + '_volqueta"> Vehículo </label>
+                                                            <input type="radio" id="tipo_transporte_{{ key }}_personalizado"
+                                                                   {{ recoleccion.recoleccionContenedor == false and recoleccion.recoleccionVolqueta == false ? 'checked':''}}
+                                                                   name="tipo_residuo_{{ key }}[recoleccion][{{ keyR }}][tipo_transporte]" value="personalizado" onClick="poblarTipoTransporte(this,{{ key }} );"> 
+                                                            <label class="control-label" > Peso personalizado </label>
+                                                            <br>
+                                                        </div>
+                                                        <div class="col-md-6 bloquear_personalizado" >
+                                                            <label class="control-label required" for="residuos_{{ key }}">
+                                                                Tipo de 
+                                                                {% if recoleccion.recoleccionVolqueta %}
+                                                                    Vehículo
+                                                                {% endif %}
+                                                                {% if recoleccion.recoleccionContenedor %}
+                                                                    Contenedor
+                                                                {% endif %}
+                                                            </label>
+                                                            <select class="cpersonalizado" id="tipo_residuo_{{ key }}_id_tipo_transporte" name="tipo_residuo_{{ key }}[recoleccion][{{ keyR}}][id_tipo_transporte]" data-tipo="" onchange="obtenerVolumen(this,{{ key }} ,{{ keyR}} )" required>
+                                                                {% if recoleccion.recoleccionVolqueta %}
+                                                                    {% for volqueta in getVolquetas() %}
+                                                                        <option value="{{volqueta.id}}" {{recoleccion.recoleccionVolqueta.volqueta.id == volqueta.id?'selected':''}}>{{volqueta.nombre}}</option>
+                                                                    {% endfor %}
+                                                                {% endif %}
+                                                                {% if recoleccion.recoleccionContenedor %}
+                                                                    {% for contenedor in getContenedores() %}
+                                                                        <option value="{{contenedor.id}}" {{recoleccion.recoleccionContenedor.contenedor.id == contenedor.id?'selected':''}}>{{contenedor.nombre}}</option>
+                                                                    {% endfor %}
+                                                                {% endif %}
+                                                            </select>
+                                                        </div>
+                                                    {% else %}
+                                                        {% if tipo_residuo.tipoResiduo.usaVolqueta %}
+                                                            <div class="col-md-6 bloquear_personalizado">
+                                                                Vehículo
+                                                                <input type="hidden" name="tipo_residuo_{{ key }}[recoleccion][{{ keyR}}]tipo_transporte]" value="volqueta">
+                                                                <label class="control-label required" for="residuos_{{ key }}">Tipo de transporte</label>
+                                                                <select class="cpersonalizado" id="tipo_residuo_{{ key }}_id_tipo_transporte" name="tipo_residuo_{{ key }}[recoleccion][{{ keyR}}][id_tipo_transporte]" data-tipo="volqueta" onchange="obtenerVolumen(this,{{ key }} ,{{ keyR}} )" required>
+                                                                    <option value="">Tipo de vehículo</option>
+                                                                    {% for volqueta in getVolquetas() %}
+                                                                        <option value="{{volqueta.id}}" 
+                                                                                {% if recoleccion.RecoleccionVolqueta and recoleccion.RecoleccionVolqueta.volqueta.id == volqueta.id%}
+                                                                                    selected
+                                                                                {%endif%}>{{volqueta.nombre}}</option>
+                                                                    {% endfor %}
+                                                                </select>
+                                                            </div>
+                                                        {% elseif tipo_residuo.tipoResiduo.usaContenedor  %}
+                                                            <div class="col-md-6 bloquear_personalizado">
+                                                                <label class="control-label">Contenedor</label>
+                                                                <input type="hidden" name="tipo_residuo_{{ key }}[recoleccion][{{ keyR}}][tipo_transporte]" value="contenedor">
+                                                                <label class="control-label required" for="residuos_{{ key }}">Tipo de transporte</label>
+                                                                <select class="cpersonalizado" id="tipo_residuo_{{ key }}_id_tipo_transporte" name="tipo_residuo_{{ key }}[recoleccion][{{ keyR}}][id_tipo_transporte]" data-tipo="contenedor" onchange="obtenerVolumen(this,{{ key }} ,{{ keyR}} )" required> 
+                                                                    <option value="">Tipo de contenedor</option>
+                                                                    {% for contenedor in getContenedores() %}
+                                                                        <option value="{{contenedor.id}}"
+                                                                                {% if recoleccion.RecoleccionContenedor and recoleccion.RecoleccionContenedor.contenedor.id == contenedor.id%}
+                                                                                    selected
+                                                                                {%endif%}
+                                                                                >{{contenedor.nombre}}</option>
+                                                                    {% endfor %}
+                                                                </select>
+                                                            </div>
+                                                        {% endif %}
+                                                    {% endif%}
+                                                    {% set tipoTransporte = null%}
+                                                    {% if tipo_residuo.tipoResiduo.usaVolqueta or tipo_residuo.tipoResiduo.usaContenedor %}
+                                                            {% if recoleccion.recoleccionContenedor%}
+                                                                {% set tipoTransporte = recoleccion.recoleccionContenedor%}
+                                                            {% endif %}
+                                                            {% if recoleccion.recoleccionVolqueta%}
+                                                                {% set tipoTransporte = recoleccion.recoleccionVolqueta%}
+                                                            {% endif %}
+                                                            
+                                                        <div class="col-md-3 bloquear_personalizado">
+                                                            <label class="control-label required">Volumen M<sup>3</sup></label>
+                                                            <div >
+                                                                <input  type="text" class="cpersonalizado form-control" value="{{tipoTransporte?tipoTransporte.volumen|replace({'.':','}):''}}" name="tipo_residuo_{{ key }}[recoleccion][{{ keyR}}][volumen]" id="tipo_residuo_{{ key }}_recoleccion_{{ keyR}}_volumen" onkeyup="calcularPeso({{key}},{{keyR}} )" required>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-3 bloquear_personalizado">
+                                                            <label class="control-label required">Cantidad</label>
+                                                            <div><input type="text" class="cpersonalizado form-control" value="{{tipoTransporte?tipoTransporte.cantidad:''}}" name="tipo_residuo_{{ key }}[recoleccion][{{ keyR}}][cantidad]" id="tipo_residuo_{{ key }}_recoleccion_{{ keyR}}_cantidad" onkeyup="calcularPeso({{key}},{{keyR}} )" required></div>
+                                                        </div>
+                                                    {% endif %}
+                                                    <div class="col-md-12">
+                                                        <label class="control-label">Manifiesto de transporte</label>
+                                                        {% if recoleccion.manifiestoTransporte and copia is not defined%}
+                                                            <a href="{{recoleccion.manifiestoTransporte}}" target="_blank"><i class="fa fa-download"></i> Descargar</a>
+                                                        {% endif %}
+                                                        <input type="file" id="tipo_residuo_{{ key }}_manifiesto" name="tipo_residuo_{{ key }}[recoleccion][{{ keyR }}][manifiesto]" class=" form-control" data-validate="no"> 
+                                                    </div>
+                                                    <div class="col-md-12" id="table_{{key}}_{{keyR}}">
+                                                        <label class="control-label required" for="residuos_{{ key }}">Residuos</label>
+                                                        <div class="col-md-12">
+                                                            {% set arrayResiduos = []%}
+                                                            {% for residuo in tipo_residuo.tipoResiduo.residuos %}
+                                                                {% set arrayResiduos = arrayResiduos|merge([{id:residuo.id,nombre:residuo.nombre,densidad:residuo.densidad}])%}
+                                                            {% endfor %}
+                                                            {% for keyT,residuoT in recoleccion.residuos %}
+                                                                <div class="row	{{ cycle(['odd', 'even'], numero_residuo) }}">
+                                                                    <span class="col-md-12">
+                                                                        <span class="fa fa-remove fa-2x pointer-red eliminar_residuo" onclick="eliminarResiduo(this)"></span>
+                                                                        <h4 class="titulo_residuo">Residuo # {{ numero_residuo }}</h4>
+                                                                    </span>
+                                                                    <span class="col-md-4">
+                                                                        <label>Residuo</label><br>
+                                                                        <select class="form-control select2 id_residuo" id="tipo_residuo_{{key}}_residuos_{{keyT}}_id" name="tipo_residuo_{{key}}[recoleccion][{{ keyR}}][residuos][{{keyT}}][id]" onChange="setDensidad(this,{{key}} )">
+                                                                            <option value="">Escoja un residuo</option>
+                                                                            {% for residuo in tipo_residuo.tipoResiduo.residuos %}
+                                                                                <option value="{{residuo.id}}" {{residuoT.residuo.id == residuo.id?'selected':''}}>{{ residuo.nombre }}</option>
+                                                                            {% endfor %}
+                                                                        </select>
+                                                                    </span>
+                                                                    <span class="col-md-4">
+                                                                        <label>Disposición</label>
+                                                                        <select class="form-control" id="tipo_residuo_{{key}}_recoleccion_{{ keyR}}_residuos_{{keyT}}_disposicion" name="tipo_residuo_{{key}}[recoleccion][{{ keyR}}][residuos][{{keyT}}][disposicion]" required> 
+                                                                            <option value="">Disposición</option>
+                                                                            {% for disposicion in residuoT.residuo.tipoResiduo.disposicion.disposiciones %}
+                                                                                <option value="{{disposicion.id}}"
+                                                                                        {% if residuoT.disposicion and residuoT.disposicion.id == disposicion.id%}
+                                                                                            selected
+                                                                                        {%endif%}
+                                                                                        >{{disposicion.nombre}}</option>
+                                                                            {% endfor %}
+                                                                        </select>
+                                                                    </span>
+                                                                    <span class="col-md-4">
+                                                                        <label>Empresa recolectora de residuos</label>
+                                                                        <select class="form-control" id="tipo_residuo_{{key}}_recoleccion_{{ keyR}}_residuos_{{keyT}}_empresa" name="tipo_residuo_{{key}}[recoleccion][{{ keyR}}][residuos][{{keyT}}][empresa]" required> 
+                                                                            <option value="">Seleccione una empresa recolectora de residuos</option>
+                                                                            {% for empresa in empresasRecolectoras%}
+                                                                                <option value="{{empresa.id}}" 
+                                                                                        {{residuoT.empresaRecolectoraResiduos and residuoT.empresaRecolectoraResiduos.id == empresa.id?'selected':''}}
+                                                                                        >{{empresa.nombre}}</option>
+                                                                            {% endfor %} 
+                                                                        </select>
+                                                                    </span>
+                                                                    <div class="col-md-4">
+                                                                        <label>¿Es aprovechable?</label><br>
+                                                                        <input type="radio" {{residuoT.reciclabe?'checked':''}}
+                                                                               class="form-control" id="tipo_residuo_{{key}}_recoleccion_{{ keyR}}_residuos_{{keyT}}_reciclable" name="tipo_residuo_{{key}}[recoleccion][{{ keyR}}][residuos][{{keyT}}][reciclable]" value="1" > Si
+                                                                        &nbsp;
+                                                                        <input type="radio" {{residuoT.reciclabe?'':'checked'}}
+                                                                               class="form-control" id="tipo_residuo_{{key}}_recoleccion_{{ keyR}}_residuos_{{keyT}}_reciclable" name="tipo_residuo_{{key}}[recoleccion][{{ keyR}}][residuos][{{keyT}}][reciclable]" value="0" > No
+                                                                    </div>
+                                                                    <p>&nbsp;</p>
+                                                                    {% if tipo_residuo.tipoResiduo.usaVolqueta or tipo_residuo.tipoResiduo.usaContenedor %}
+                                                                        <span class="col-md-4 bloquear_personalizado">
+                                                                            <label>Densidad (t/m3)</label>
+                                                                            <br>
+                                                                            <input type="text" class="form-control" value="{{ residuoT.densidad?residuoT.densidad|replace({'.':','}):residuoT.residuo.densidad|replace({'.':','})}}"  name="tipo_residuo_{{key}}[recoleccion][{{keyR}}][residuos][{{keyT}}][densidad]" onkeyup="calcularPeso({{key}},{{keyR}} )" required>
+                                                                        </span>
+                                                                    {% endif %}
+                                                                    <span class="col-md-4">
+                                                                        <label>Peso Kg </label>
+                                                                        <input type="text" class="peso form-control" value="{{ residuoT.peso?residuoT.peso|replace({'.':','}):''}}" name="tipo_residuo_{{key}}[recoleccion][{{ keyR}}][residuos][{{keyT}}][peso]"
+                                                                               {{ (tipo_residuo.tipoResiduo.usaVolqueta or tipo_residuo.tipoResiduo.usaContenedor) and tipoTransporte != null? 'readonly':'' }} onkeyup="calcularPeso({{key}},{{keyR}} )" required>
+                                                                    </span>
+                                                                    <span class="col-md-4">
+                                                                        <label>Precio unitario ($)</label><br>
+                                                                        <input type="text" class="form-control" value="{{residuoT.precio|replace({'.':','})}}"  name="tipo_residuo_{{key}}[recoleccion][{{ keyR}}][residuos][{{keyT}}][precio]" onkeyup="calcularPeso({{key}},{{keyR}} )" required>
+                                                                    </span>
+                                                                    <script>
+                                                                        $('[name="tipo_residuo_{{key}}[residuos][{{keyT}}][precio]"]').val(format({{ residuoT.precio?residuoT.precio:''}}));
+                                                                    </script>
+                                                                    <div class="col-md-12">
+                                                                        <br>
+                                                                        <label class="total_residuo">Total</label>
+                                                                        $<span class="valor_total_residuo" id="total_{{ residuoT.id }}"></span>
+                                                                    </div>
+                                                                </div>
+                                                                <br>
+                                                                {% set numero_residuo = numero_residuo+1 %}
+                                                            {% endfor %}
+                                                        </div>
+                                                        {% if tipoTransporte == null %}
+                                                            <script>
+                                                                $('#recoleccion_numero_{{keyR}}').find('.bloquear_personalizado').hide();
+                                                            </script>
+                                                        {% endif %}
+                                                        <div  class="pointer" style="text-align: center;" onclick="agregarResiduo(this,{{tipo_residuo.tipoResiduo.usaVolqueta?'true':'false'}} , {{tipo_residuo.tipoResiduo.usaContenedor?'true':'false'}},{{key}} ,{{keyR}} ,{{tipo_residuo.tipoResiduo.id}} )"><i class="fa fa-plus green"></i> <span class=" pointer btn_agresiduo">Agregar residuo</span></div>
+                                                        <span class='json_residuos' data-tipos='{{arrayResiduos | json_encode()}}'></span>
+                                                    </div>
+                                                </section>
+                                                <script>
+                                                    calcularPeso({{key}},{{keyR}} );
+                                                </script>
+                                            {% endfor %}
+                                        </div>
+                                        <div class="pointer" style="text-align: left;" onclick="agregarRecoleccion({{tipo_residuo.tipoResiduo.usaContenedor?'true':'false'}},                                        {{tipo_residuo.tipoResiduo.usaVolqueta?'true':'false'}} , {{ key }}, $('#tipo_residuo_{{key}}').attr('id'))"><i class="fa fa-plus green"></i> Agregar recolección</div>
+                                        <div class="col-md-12">
+                                            <div class="col-md-6">
+                                                <div class="table-total-parcial">
+                                                    <table class="table table-striped">
+                                                        <thead>
+                                                            <tr>
+                                                                <th class="titulo_programacion">Tipo de residuo</th>
+                                                                <th class="titulo_programacion">Última fecha de recolección</th>
+                                                                <th class="titulo_programacion">Peso en Kg</th>
+                                                                <th class="titulo_programacion">Costo</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>{{tipo_residuo.tipoResiduo.nombre}}</td>
+                                                                <td id="fecha_recoleccion_{{ key }}">{{tipo_residuo.recolecciones[tipo_residuo.recolecciones|length-1].fechaRecoleccionEjecutada|date('d-m-Y')}}</td>
+                                                                <td id="totalPeso_{{ key }}"></td>
+                                                                <td id="totalPrecio_{{ key }}"></td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="control-label">Certificado de disposición</label>
+                                                {% if tipo_residuo.certificadoDisposicion and copia is not defined %}
+                                                    <a href="{{tipo_residuo.certificadoDisposicion}}" target="_blank"><i class="fa fa-download"></i> Descargar</a>
+                                                {% else %}
+                                                    {% if tipo_residuo.validado == false and copia is not defined%}
+                                                        <i class="fa fa-warning" style="color:red" data-toggle="tooltip" data-placement="top" title="No ha subido el certificado de disposición"></i>
+                                                    {% endif %}
+                                                {% endif %}
+                                                <input type="file" id="tipo_residuo_{{key}}_certificado" name="tipo_residuo_{{key}}[certificado]" class=" form-control" data-validate="no"> 
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+{% endif %}

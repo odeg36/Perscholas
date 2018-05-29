@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <title>{% block title %}Bienvenido {{ project_name }}{% endblock %}</title>
+        {% block stylesheets %}
+            <link rel="stylesheet" href="{{ asset('bundles/frontend/css/normalize.css') }}">
+            <link rel="stylesheet" href="{{ asset('bundles/frontend/css/main.css') }}">
+            <link rel="stylesheet" href="{{ asset('bundles/frontend/bootstrap/css/bootstrap.css') }}">
+            <link rel="stylesheet" href="{{ asset('bundles/frontend/font-awesome/css/font-awesome.css') }}">
+
+            <link rel="stylesheet" href="{{ asset('bundles/frontend/calendario/css/calendar.css') }}">
+            <link rel="stylesheet" href="{{ asset('bundles/frontend/css/owl_carousel/owl.carousel.css') }}">
+            <link rel="stylesheet" href="{{ asset('bundles/frontend/datatables/datatables.css') }}">
+
+        {% endblock %}
+        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+        <link rel="icon" type="image/png" href="{{ asset('bundles/frontend/images/favicon/favicon-32x32.png') }}" sizes="32x32" />
+        <link rel="icon" type="image/png" href="{{ asset('bundles/frontend/images/favicon/favicon-16x16.png') }}" sizes="16x16" />
+        <script>
+            var format = function (num, show) {
+                if (show) {
+                    num = num.split('.').join(',');
+                }
+                var str = num.toString().replace("$", ""), parts = false, output = [], i = 1, formatted = null;
+                if (str.indexOf(",") > 0) {
+                    parts = str.split(",");
+                    str = parts[0];
+                }
+                str = str.split("").reverse();
+                for (var j = 0, len = str.length; j < len; j++) {
+                    if (str[j] != ".") {
+                        output.push(str[j]);
+                        if (i % 3 == 0 && j < (len - 1)) {
+                            output.push(".");
+                        }
+                        i++;
+                    }
+                }
+                formatted = output.reverse().join("");
+                //var formatComplete = (formatted + ((parts) ? "," + parts[1].substr(0, 3) : ""));
+                //while (formatComplete.length < 5) {
+                //    formatComplete = formatComplete + "0";
+                //}
+                //return formatComplete;#}
+                return(formatted + ((parts) ? "," + parts[1].substr(0, 3) : ""));
+            };
+
+            var unformat = function (num) {
+                var unformated = num.split('.').join('').split(',').join('.');
+                return unformated;
+            };
+        </script>
+        <script src="{{  asset('bundles/frontend/js/jquery-2.1.4.min.js') }}" ></script>
+        <script src="/bundles/sonatacore/vendor/moment/min/moment.min.js"></script>
+        <link rel="stylesheet" href="/bundles/sonatacore/vendor/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css">
+        <script src="/bundles/sonatacore/vendor/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
+
+        <link rel="stylesheet" href="/bundles/sonatacore/vendor/select2/select2.css">
+        <link rel="stylesheet" href="/bundles/sonatacore/vendor/select2-bootstrap-css/select2-bootstrap.min.css">
+        <link rel="stylesheet" href="/bundles/sonatacore/vendor/select2-bootstrap-css/select2-bootstrap.min.css">
+        <script src="/bundles/sonatacore/vendor/select2/select2.min.js"></script>
+        <script src="/bundles/sonatacore/vendor/select2/select2_locale_es.js"></script>
+        <script src="/bundles/sonatacore/vendor/moment/locale/es.js"></script>
+    </head>
+    <body>
+        <div id="div_carga">
+            <img id="cargador" src="{{ asset('bundles/backend/images/loading.gif') }}"/>
+        </div>
+        <div class="container-fluid">
+            <div class="row">
+            {% block body %}{% endblock %}
+        </div>
+    </div>
+    {% block javascripts %}
+        <script src="{{  asset('bundles/frontend/bootstrap/js/bootstrap.js') }}" ></script>
+        <script src="{{  asset('bundles/frontend/js/I8/modernizr.js') }}" ></script>
+
+        <script src="{{  asset('bundles/frontend/js/app.js') }}" ></script>
+        <script src="{{  asset('bundles/frontend/calendario/js/language/es-CO.js') }}" ></script>
+        <script src="{{  asset('bundles/frontend/calendario/components/underscore/underscore-min.js') }}" ></script>
+        <script src="{{  asset('bundles/frontend/calendario/js/calendar.js') }}" ></script>
+        <script src="{{  asset('bundles/frontend/js/owl_carousel/owl.carousel.js') }}" ></script>
+        <script src="{{  asset('bundles/frontend/datatables/datatables.js') }}" ></script>
+
+        <script type="text/javascript">
+            $('#tabla').DataTable({
+                "language": {
+                    "sProcessing": "Procesando...",
+                    "sLengthMenu": "Mostrar _MENU_ registros",
+                    "sZeroRecords": "No se encontraron resultados",
+                    "sEmptyTable": "Ningún dato disponible en esta tabla",
+                    "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                    "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+                    "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+                    "sInfoPostFix": "",
+                    "sSearch": "Buscar:",
+                    "sUrl": "",
+                    "sInfoThousands": ",",
+                    "sLoadingRecords": "Cargando...",
+                    "oPaginate": {
+                        "sFirst": "Primero",
+                        "sLast": "Último",
+                        "sNext": "Siguiente",
+                        "sPrevious": "Anterior"
+                    },
+                },
+            });
+        </script>
+
+        <script>
+            var pagina = 1;
+            $(document).ready(function () {
+                cargarAlertas(pagina);
+            });
+            function cargarMas() {
+                pagina = pagina + 1;
+                cargarAlertas(pagina);
+            }
+            function cargarAlertas(pagina) {
+                $.ajax({
+                    url: "{{path('ajax_alertas')}}",
+                    data: {
+                        pagina: pagina
+                    },
+                    success: function (data) {
+                        var li = $('#cargarMas');
+                        $.each(data, function (k, v) {
+                            $('<li>' + v.mensaje + '</li>').insertBefore(li);
+                        });
+                        if (data.length < 1) {
+                            li.html('No hay más notificaciones').attr('onclick', '');
+                        }
+                    }
+                });
+            }
+            $(document).on('click', '#alertas li', function (e) {
+                e.stopPropagation();
+            });
+            var format = function (num, show) {
+                if (show) {
+                    num = num.split('.').join(',');
+                }
+                var str = num.toString().replace("$", ""), parts = false, output = [], i = 1, formatted = null;
+                if (str.indexOf(",") > 0) {
+                    parts = str.split(",");
+                    str = parts[0];
+                }
+                str = str.split("").reverse();
+                for (var j = 0, len = str.length; j < len; j++) {
+                    if (str[j] != ".") {
+                        output.push(str[j]);
+                        if (i % 3 == 0 && j < (len - 1)) {
+                            output.push(".");
+                        }
+                        i++;
+                    }
+                }
+                formatted = output.reverse().join("");
+                return(formatted + ((parts) ? "," + parts[1].substr(0, 3) : ""));
+            };
+        </script>
+        <script type="text/javascript" src="{{asset("/bundles/backend/js/jscolor.js" ) }}"></script>
+        <link rel="stylesheet" href="{{ asset("bundles/backend/SweetAlert/sweetalert.css") }}">
+        <script src="{{ asset("bundles/backend/SweetAlert/sweetalert.min.js") }}"></script>
+        <script src="http://malsup.github.com/jquery.form.js"></script> 
+        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+        <script>
+            // Load the Visualization API and the corechart package.
+            google.charts.load('current', {'packages': ['corechart']});
+            $(document).ready(function () {
+                $('select').select2();
+                $('.precio').each(function (k, v) {
+                    var show = true;
+                    $(v).text(format($(v).text(), show));
+                });
+            });
+        </script>
+    {% endblock %}
+</body>
+</html>

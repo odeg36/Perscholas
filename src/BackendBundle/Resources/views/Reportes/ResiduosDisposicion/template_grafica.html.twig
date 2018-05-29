@@ -1,0 +1,66 @@
+{% set total = 0%}
+<script type="text/javascript">
+    google.charts.setOnLoadCallback(drawChartTotalTipos);
+    function drawChartTotalTipos() {
+        var data = google.visualization.arrayToDataTable([
+            ['Disposicion', 'Cantidad'],
+    {% for disposicion in datos %} 
+        {% set total = total + disposicion['cantidad']%}
+                    ['{{disposicion['nombre']}}', {{disposicion['cantidad']}}],
+    {% endfor %}
+            ]);
+            var formatter = new google.visualization.NumberFormat({ prefix: '',decimalSymbol: ',', groupingSymbol: '.' });
+            formatter.format(data, 1);
+            var chart = new google.visualization.PieChart(document.getElementById('{{nombre_grafica}}'));
+            google.visualization.events.addListener(chart, 'ready',
+                    function () {
+                        $('#form_tipos').find('#r_residuos_disposicion_form_imagen_grafica').val(chart.getImageURI());
+                        $('#form_tipos').find('button[name="excel"]').eq(0).removeAttr('disabled');
+                        $('#form_tipos').find('button[name="pdf"]').eq(0).removeAttr('disabled');
+                    });
+            var options = {
+                title: '{{titulo}}',
+                is3D: true,
+                animation: {
+                    duration: 1000,
+                    startup: true
+                },
+                legend: {position: 'labeled'}
+            };
+            chart.draw(data, options);
+        }
+        $(window).resize(function () {
+            if (drawChartTotalTipos && typeof drawChartTotalTipos === 'function') {
+                drawChartTotalTipos();
+            }
+        });
+</script>
+<div class="col-md-12">
+    <div id="{{nombre_grafica}}" style="width: 100%; height: 400px; margin: 0 auto"></div>
+</div>
+<div class="col-md-12">
+    <table class="table table-bordered" style="width:50%">
+        <thead>
+            <tr>
+                <th>Disposición</th>
+                <th># de veces utilizada</th>
+                <th>Porcentaje</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for disposicion in datos %}
+                <tr>
+                    <td>{{disposicion.nombre}}</td>
+                    <td><span class="peso">{{disposicion.cantidad}}</span></td>
+                    <td>{{(disposicion.cantidad*100/total)|round(1)}}%</td>
+                </tr>
+            {% endfor %}
+
+            <tr>
+                <td>Total</td>
+                <td><span class="peso">{{total}}</span></td>
+                <td>100%</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

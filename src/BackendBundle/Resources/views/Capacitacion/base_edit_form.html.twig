@@ -1,0 +1,112 @@
+{% block form %}
+    {{ sonata_block_render_event('sonata.admin.edit.form.top', { 'admin': admin, 'object': object }) }}
+
+    {% set url = admin.id(object) is not null ? 'edit' : 'create' %}
+
+    {% if not admin.hasRoute(url)%}
+        <div>
+            {{ "form_not_available"|trans({}, "SonataAdminBundle") }}
+        </div>
+    {% else %}
+        <form
+            {% if admin_pool.getOption('form_type') == 'horizontal' %}class="form-horizontal"{% endif %}
+            role="form"
+            action="{{ admin.generateUrl(url, {'id': admin.id(object), 'uniqid': admin.uniqid, 'subclass': app.request.get('subclass')}) }}" {{ form_enctype(form) }}
+            method="POST"
+            {% if not admin_pool.getOption('html5_validate') %}novalidate="novalidate"{% endif %}
+            >
+            {% if form.vars.errors|length > 0 %}
+                <div class="sonata-ba-form-error">
+                    {{ form_errors(form) }}
+                </div>
+            {% endif %}
+            <div class="box box-success">
+                <div class="box-header">
+                    <h3 class="box-title">
+                        Datos basicos
+                    </h3>
+                </div>
+                <div class="box-body">
+                    <div class="sonata-ba-collapsed-fields">
+                        <div class="form-group" id="sonata-ba-field-container-s57bdc5589c151_usuario">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    {{ form_row(form.cliente) }}
+                                    {{ form_row(form.centro_recoleccion) }}
+                                    {{ form_row(form.gestor) }}
+                                    {{ form_row(form.fechaCapacitacion) }}
+                                    {{ form_row(form.numeroAsistentes) }}
+                                    {{ form_row(form.tipoCapacitacion) }}
+                                    {{ form_row(form.archivo) }}
+                                    {{ form_row(form.evidencia) }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{ form_rest(form) }}
+            {% block formactions %}
+                {% include "BackendBundle:Default:botones.html.twig" with {'object': object} %}
+            {% endblock formactions %}
+            {{ form_rest(form) }}
+        </form>
+    {% endif%}
+    {{ sonata_block_render_event('sonata.admin.edit.form.bottom', { 'admin': admin, 'object': object }) }}
+    <script type="text/javascript">
+        $("#capacitacion_cliente").on("change", function () {
+            var data = {
+                cliente_id: $(this).val()
+            };
+            $.ajax({
+                type: 'post',
+                url: '{{ path("ajax_centros_recoleccion") }}',
+                data: data,
+                beforeSend: function (xhr) {
+                    $('#div_carga').show();
+                },
+                complete: function (jqXHR, textStatus) {
+                    $('#div_carga').hide();
+                },
+                success: function (data) {
+                    var $centro_recoleccion_selector = $('#capacitacion_centro_recoleccion');
+                    $centro_recoleccion_selector.html('<option>Escoja un centro de costo</option>');
+                    if (data.length === 0) {
+                        $centro_recoleccion_selector.parent().parent().addClass('has-error');
+                        var error = '<div class="help-block sonata-ba-field-error-messages"><ul><li>No hay un centro de costo asociado al cliente seleccionado</li></ul></div>';
+                        $centro_recoleccion_selector.parent().append(error);
+                    } else {
+                        $centro_recoleccion_selector.parent().parent().removeClass('has-error');
+                        $centro_recoleccion_selector.parent().find('div.help-block').eq(0).remove();
+                    }
+                    $centro_recoleccion_selector.html('');
+                    for (var i = 0, total = data.length; i < total; i++) {
+                        $centro_recoleccion_selector.append('<option value="' + data[i].id + '">' + data[i].name + '</option>');
+                    }
+                }
+            });
+            setGestores(data);
+        });
+        function setGestores(data) {
+            $.ajax({
+                type: 'post',
+                url: '{{ path("ajax_user_cliente") }}',
+                data: data,
+                beforeSend: function (xhr) {
+                    $('#div_carga').show();
+                },
+                complete: function (jqXHR, textStatus) {
+                    $('#div_carga').hide();
+                },
+                success: function (data) {
+                    var $gestor_selector = $('#capacitacion_gestor');
+                    $gestor_selector.html('');
+                    for (var i = 0, total = data.length; i < total; i++) {
+                        $gestor_selector.append('<option value="' + data[i].id + '">' + data[i].name + '</option>');
+                    }
+                }
+            });
+        }
+    </script>
+    {{ sonata_block_render_event('sonata.admin.edit.form.bottom', { 'admin': admin, 'object': object }) }}
+{% endblock %}

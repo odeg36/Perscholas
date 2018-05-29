@@ -1,0 +1,43 @@
+{% extends "BackendBundle:Reportes:base_grafica_pdf.html.twig" %}
+{% block content %}
+    <div style="clear: both;"></div>
+    <h3>{{titulo}}</h3>
+    <div>
+        <table align="center" cell style="padding:0 15px 0 15px;">
+            <thead>
+                <tr>
+                    <th>Cliente</th>
+                    <th>Centro de costo</th>
+                    <th>Gestor Ambiental</th>
+                    <th>Fecha de capacitación</th>
+                    <th>Asistentes</th>
+                    <th>Tipo de capacitación</th>
+                    <th>Archivo</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                {% for capacitacion in datos %}
+                    <tr>
+                        <td>{{capacitacion.centroRecoleccion.cliente}}</td>
+                        <td>{{capacitacion.centroRecoleccion}}</td>
+                        <td>{{capacitacion.gestor}}</td>
+                        <td>{{capacitacion.fechaCapacitacion|date('d-m-Y')}}</td>
+                        <td>{{capacitacion.numeroAsistentes}}</td>
+                        <td>{{capacitacion.tipoCapacitacion}}</td>
+                        <td>
+
+                            {% set url = app.request.scheme %}
+                            {% set url = url ~ "://"%}
+                            {% set url = url ~ app.request.host ~ ":" ~app.request.port%}
+                            {% set url = url ~ capacitacion.archivoCapacitacion %}
+                            <a href="{{ url }}" target="_blank">
+                                Ver archivo
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

@@ -1,0 +1,90 @@
+sonata_block:
+    default_contexts: [symfony_web_app]
+    blocks:
+        sonata.admin.block.admin_list:
+            contexts: [admin]
+        sonata.block.service.text: ~
+        sonata.block.service.action: ~
+        sonata.block.service.rss: ~
+        sonata.admin.block.search_result:
+            contexts:   [admin]
+        sonata.user.block.menu: ~
+sonata_intl:
+    timezone:
+        locales:
+            es:    America/Bogota
+
+sonata_admin:
+    title: %project_name%
+    title_logo: /bundles/backend/images/logo.png
+    templates:
+        # default global templates
+        layout:    SonataAdminBundle::standard_layout.html.twig
+        ajax:      SonataAdminBundle::ajax_layout.html.twig
+        # default values of actions templates, they should extend global templates
+        list:    SonataAdminBundle:CRUD:list.html.twig
+        show:    SonataAdminBundle:CRUD:show.html.twig
+        edit:    SonataAdminBundle:CRUD:edit.html.twig
+        history: SonataAdminBundle:CRUD:history.html.twig
+        preview: SonataAdminBundle:CRUD:preview.html.twig
+        # default values of helper templates
+        short_object_description: SonataAdminBundle:Helper:short-object-description.html
+    options:
+        html5_validate:       false
+    
+    dashboard:
+        groups:
+            Cliente:
+                roles: [ROLE_GESTOR ]
+                label: 'Empresa'
+                icon:  '<i class="fa fa-industry"></i>'
+            User:
+                roles: [ ROLE_SONATA_ADMIN ]
+                label: 'Usuarios'
+                icon:  '<i class="fa fa-users"></i>'
+            DatosDeRecoleccion:
+                roles: [ROLE_SONATA_ADMIN,ROLE_GESTOR ]
+                label: 'Datos de recolección'
+                icon:  '<i class="fa fa-calendar"></i>'
+            Capacitacion:
+                roles: [ ROLE_SONATA_ADMIN ]
+                label: 'Capacitaciones'
+                icon: '<i class="fa fa-graduation-cap"></i>'
+            Pmirs:
+                roles: [ ROLE_SONATA_ADMIN,ROLE_GESTOR ]
+                label: 'PMIRS'
+                icon: '<i class="fa fa-check-square-o"></i>'
+            Informes:
+                roles: [ ROLE_SONATA_ADMIN , ROLE_GESTOR]
+                label: 'Informes'
+                icon: '<i class="fa fa-line-chart"></i>'
+                items:
+                    - backend.admin.reporte
+                    - route:        admin_model_reporte_detallado
+                      label:        Reporte detallado de Indicadores
+                    - route:        admin_model_reporte_operativo
+                      label:        Operativo
+                    - route:        admin_model_reporte_economico
+                      label:        Ecónomico
+                    - route:        admin_model_reporte_capacitaciones
+                      label:        Capacitaciones
+                    - route:        admin_model_reporte_checklist
+                      label:        Checklist
+                    - route:        admin_model_reporte_residuosDisposicion
+                      label:        Tipos de residuos y su disposición final
+            Settings:
+                roles: [ ROLE_SONATA_ADMIN]
+                label: 'Configuración'
+                icon: '<i class="fa fa-cogs"></i>'
+            Facturacion:
+                roles: [ ROLE_SONATA_ADMIN ]
+                label: 'Facturacion'
+                icon:  '<i class="fa fa-usd"></i>'
+            Ayuda:
+                roles: [ ROLE_SONATA_ADMIN,ROLE_GESTOR]
+                label: 'Ayuda'
+                icon: '<i class="fa fa-question"></i>'
+            
+        blocks:
+            - { position: left,  type: sonata.admin.block.admin_list, settings: { groups: [DatosDeRecoleccion,User, Cliente, Trash,Ayuda] }}
+            - { position: right,  type: sonata.admin.block.admin_list, settings: { groups: [Settings] } }

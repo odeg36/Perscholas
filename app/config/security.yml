@@ -1,0 +1,65 @@
+security:
+    encoders:
+        FOS\UserBundle\Model\UserInterface: sha512
+
+    providers:
+        fos_userbundle:
+            id: fos_user.user_provider.username_email
+            
+    firewalls:
+        administrar:
+            pattern:            /admin(.*)
+            context:            user
+            form_login:
+                require_previous_session: false
+                provider:       fos_userbundle
+                login_path:     /login
+                use_forward:    false
+                check_path:     /admin/login_check
+                success_handler: authentication_admin_handler
+                failure_path:   null
+            logout:
+                path:           /admin/logout
+                target:         /login
+                success_handler: logout_admin_handler
+            anonymous:          null
+        main:
+            pattern:             .*
+            context:             user
+            form_login:
+                require_previous_session: false
+                provider:       fos_userbundle
+                login_path:     /login
+                use_forward:    false
+                check_path:     /login_check
+                failure_path:   null
+                success_handler: authentication_admin_handler
+            logout:             true
+            anonymous:          true
+            remember_me:
+                key:      "%secret%"
+                lifetime: 31536000 # 365 days in seconds
+                path:     /
+                domain:   ~ # Defaults to the current domain from $_SERVER
+
+    access_control:
+        # URL of FOSUserBundle which need to be available to anonymous users
+        - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/register, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }
+
+        # Admin login page needs to be access without credential
+        - { path: ^/admin/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/admin/logout$, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/admin/login_check$, role: IS_AUTHENTICATED_ANONYMOUSLY }
+
+        # Secured part of the site
+        # This config requires being logged for the whole site and having the admin role for the admin part.
+        # Change these rules to adapt them to your needs
+        - { path: ^/admin/*, role: [ROLE_SONATA_ADMIN,ROLE_GESTOR] }
+        - { path: ^/.*, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        
+    role_hierarchy:
+        ROLE_SONATA_ADMIN: [ROLE_SONATA_ADMIN, ROLE_SUPER_ADMIN, ROLE_CLIENTE, ROLE_USER]
+        ROLE_GESTOR: [ROLE_GESTOR]
+        ROLE_CLIENTE: [ROLE_CLIENTE]

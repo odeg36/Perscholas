@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping 
+    xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd"
+    xmlns:gedmo="http://gediminasm.org/schemas/orm/doctrine-extensions-mapping">
+    
+    <entity repository-class="ModelBundle\Entity\FacturacionRepository" name="ModelBundle\Entity\Facturacion" table="facturacion">
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO"/>
+        </id>
+        
+        <many-to-one field="cliente" target-entity="ModelBundle\Entity\Cliente" inversed-by="facturas" orphan-removal="true">
+            <join-column name="cliente_id" referenced-column-name="id" on-delete="restrict" on-update="cascade" nullable="0"/>
+        </many-to-one>
+        <field name="valor_a_pagar" type="float" column="valor_a_pagar"/>
+        <field name="factura" type="string" length="500" column="factura"/>
+        
+        <field name="fechaCreacion" type="date" column="fecha_creacion">
+            <gedmo:timestampable on="create"/>
+        </field>
+        <field name="fechaActualizacion" type="date" column="fecha_actualizacion">
+            <gedmo:timestampable on="update"/>
+        </field>
+    </entity>
+</doctrine-mapping>

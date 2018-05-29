@@ -1,0 +1,75 @@
+<form
+    class="form-horizontal"
+    id="form_total_tipos"
+    role="form"
+    action="{{ path("frontend_reporte_detallado") }}"
+    method="POST"
+    >
+    {% if formTotalTipos.vars.errors|length > 0 %}
+        <div class="sonata-ba-form-error">
+            {{ form_errors(formTotalTipos) }}
+        </div>
+    {% endif %}
+    <div class="box box-success">
+        <div class="box-header">
+            <h4 class="box-title">
+                Reporte de cantidad recolectada de residuos por categoría
+            </h4>
+        </div>
+        <div class="box-body">
+            <div class="sonata-ba-collapsed-fields">
+                <div class="form-group" id="sonata-ba-field-container-s57bdc5589c151_usuario">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class=" sonata-ba-field">
+                                {{form_row(formTotalTipos.fecha_inicial)}}
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class=" sonata-ba-field">
+                                {{form_row(formTotalTipos.fecha_final)}}
+                            </div>
+                        </div>
+                        <div class="col-md-6" style="display: none">
+                            <div class=" sonata-ba-field">
+                                {{form_row(formTotalTipos.cliente)}}
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class=" sonata-ba-field">
+                                <button class="btn btn-primary" type="submit" name="generar" value="true" style="margin-top: 5%;"><i class="fa fa-signal"></i> Generar</button>
+                                <button class="btn btn-danger" type="submit" name="pdf" value="true" style="margin-top: 5%;" disabled><i class="fa fa-file-pdf-o"></i> PDF</button>
+                                <button class="btn btn-success" type="submit" name="excel" value="true" style="margin-top: 5%;" disabled><i class="fa fa-file-excel-o"></i> Excel</button>
+                                <a class="btn btn-default" name="restablecer" style="margin-top: 5%;" onclick="resetForm(this);">Restablecer</a>
+                            </div>
+                        </div>
+                        <div id="graficaTotalTipos">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{ form_rest(formTotalTipos) }}
+</form>
+<script>
+    $('#form_total_tipos').submit(function () {
+        var $btn = $(document.activeElement);
+        if (
+                /* there is an activeElement at all */
+                $btn.length &&
+                /* it's a child of the form */
+                $(this).has($btn) &&
+                /* it's really a submit element */
+                $btn.is('button[type="submit"], input[type="submit"], input[type="image"]') &&
+                /* it has a "name" attribute */
+                $btn.is('[name]') &&
+                ($btn.attr('name') == "pdf" || $btn.attr('name') == "excel")
+                ) {
+        } else {
+            options.target = '#graficaTotalTipos';
+            $('#form_total_tipos').ajaxSubmit(options);
+            return false;
+        }
+    });
+</script>

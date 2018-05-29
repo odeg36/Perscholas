@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping 
+    xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd"
+    xmlns:gedmo="http://gediminasm.org/schemas/orm/doctrine-extensions-mapping">
+    
+    <entity repository-class="ModelBundle\Entity\MunicipioRepository" name="ModelBundle\Entity\Municipio" table="municipio">
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO"/>
+        </id>
+        <field name="nombre" type="string" column="nombre"/>
+        <many-to-one field="departamento" target-entity="ModelBundle\Entity\Departamento" inversed-by="municipios" orphan-removal="true">
+            <join-column name="departamento_id" referenced-column-name="id" on-delete="restrict" on-update="cascade" nullable="0"/>
+        </many-to-one>
+        <one-to-many field="clientes" target-entity="ModelBundle\Entity\Cliente" mapped-by="municipio" orphan-removal="true">
+            <cascade>
+                <cascade-persist/>
+            </cascade>
+            <order-by>
+                <order-by-field name="id" direction="ASC" />
+            </order-by>
+        </one-to-many>
+        <one-to-many field="zonas" target-entity="ModelBundle\Entity\Zona" mapped-by="municipio" orphan-removal="true">
+            <cascade>
+                <cascade-persist/>
+            </cascade>
+            <order-by>
+                <order-by-field name="id" direction="ASC" />
+            </order-by>
+        </one-to-many>
+    </entity>
+</doctrine-mapping>

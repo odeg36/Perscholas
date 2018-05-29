@@ -1,0 +1,16 @@
+{#
+
+This file is part of the Sonata package.
+
+(c) Thomas Rabaix <thomas.rabaix@sonata-project.org>
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+
+#}
+
+{% if admin.hasroute('list') and admin.isGranted('LIST')%}
+    <a class="sonata-action-element" target="_blank" href="{{ asset("bundles/backend/manual_usuario.pdf") }}">
+        <img src="{{ asset("bundles/backend/images/descargar_manual.png") }}">
+    </a>
+{% endif %}

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping 
+    xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd"
+    xmlns:gedmo="http://gediminasm.org/schemas/orm/doctrine-extensions-mapping">
+    
+    <entity repository-class="ModelBundle\Entity\ComponentePMIRSRepository" name="ModelBundle\Entity\ComponentePMIRS" table="componente_pmirs">
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO"/>
+        </id>
+        <field name="nombre" type="string" column="nombre"/>
+        <one-to-many field="preguntas_PMIRS" target-entity="ModelBundle\Entity\PreguntaPMIRS" mapped-by="componente" />
+    </entity>
+</doctrine-mapping>

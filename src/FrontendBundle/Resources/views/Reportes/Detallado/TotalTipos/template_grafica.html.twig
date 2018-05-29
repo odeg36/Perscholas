@@ -1,0 +1,64 @@
+{% set totalPeso = 0%}
+<script type="text/javascript">
+    google.charts.setOnLoadCallback(drawChartTotalTipos);
+    function drawChartTotalTipos() {
+        var data = google.visualization.arrayToDataTable([
+            ['Residuo', 'Cantidad'],
+    {% for residuo in datos %} 
+        {% set totalPeso = totalPeso + residuo['peso']%}
+                            ['{{residuo['nombre']}}', {{residuo['peso']}}],
+    {% endfor %}
+            ]);
+            var chart = new google.visualization.PieChart(document.getElementById('{{nombre_grafica}}'));
+            google.visualization.events.addListener(chart, 'ready',
+                    function () {
+                        $('#form_total_tipos').find('#r_detallado_total_tipos_form_imagen_grafica').val(chart.getImageURI());
+                        $('#form_total_tipos').find('button[name="excel"]').eq(0).removeAttr('disabled');
+                        $('#form_total_tipos').find('button[name="pdf"]').eq(0).removeAttr('disabled');
+                    });
+            var options = {
+                title: '{{titulo}}',
+                is3D: true,
+                colors: [
+    {% for residuo in datos %} 
+                    '#{{residuo['color']}}',
+    {% endfor %}
+                ],
+                animation: {
+                    duration: 1000,
+                    startup: true
+                },
+                legend: {position: 'labeled'}
+            };
+            chart.draw(data, options);
+        }
+        $(window).resize(function () {
+            if (drawChartTotalTipos && typeof drawChartTotalTipos === 'function') {
+                drawChartTotalTipos();
+            }
+        });
+</script>
+<div class="col-md-12">
+    <div id="{{nombre_grafica}}" style="width: 100%; height: 400px; margin: 0 auto"></div>
+</div>
+<div class="col-md-12">
+    <table class="table table-bordered" style="width:30%">
+        <thead>
+            <tr>
+                <th>Tipo de residuo</th>
+                <th>Peso en Kg</th>
+                <th>Porcentaje</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            {% for tipo_residuo in datos %}
+                <tr>
+                    <td>{{tipo_residuo.nombre}}</td>
+                    <td><span class="peso">{{tipo_residuo.peso|number_format(3, ',', '.')}}</span></td>
+                    <td>{{(tipo_residuo.peso*100/totalPeso)|round(1)|number_format(1, ',', '.')}}%</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>

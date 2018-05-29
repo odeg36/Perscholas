@@ -1,0 +1,201 @@
+{#
+
+This file is part of the Sonata package.
+
+(c) Thomas Rabaix <thomas.rabaix@sonata-project.org>
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+
+#}
+
+{% extends base_template %}
+
+{% block javascripts %}
+    {{parent()}}
+    <script src="//cdnjs.cloudflare.com/ajax/libs/numeral.js/1.4.5/numeral.min.js"></script>
+{% endblock %}
+
+{% block actions %}
+    <li>{% include 'SonataAdminBundle:Button:edit_button.html.twig' %}</li>
+    <li>{% include 'SonataAdminBundle:Button:history_button.html.twig' %}</li>
+    <li>{% include 'SonataAdminBundle:Button:list_button.html.twig' %}</li>
+    <li>{% include 'SonataAdminBundle:Button:create_button.html.twig' %}</li>
+    {% endblock %}
+
+{% block tab_menu %}{{ knp_menu_render(admin.sidemenu(action), {'currentClass' : 'active', 'template': admin_pool.getTemplate('tab_menu_template')}, 'twig') }}{% endblock %}
+
+{% block show %}
+    <div class="sonata-ba-view row-fluid">
+        <table class="table table-bordered">
+            <thead>
+                <tr class="sonata-ba-view-title">
+                    <th colspan="2"> 
+                        Recolección: {{object}}
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="sonata-ba-view-container">
+                    <th>Centro de costo</th>
+                    <td>{{object.centroRecoleccion}}</td>
+                </tr>
+                <tr class="sonata-ba-view-container">
+                    <th>Gestor ambiental</th>
+                    <td>{{object.gestorAmbiental}}</td>
+                </tr>
+                <tr class="sonata-ba-view-container">
+                    <th>Recolección</th>
+                    <td>
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr class="sonata-ba-view-title">
+                                    <th colspan="2"> 
+                                        Tipos de residuos
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% set totalPeso = 0 %}
+                                {% set totalPrecio = 0 %}
+                                {% for tipo in object.tiposResiduosTransporte %}
+                                    <tr>
+                                        <th>{{tipo.tipoResiduo}}</th>
+                                        <td>
+                                            <table class="table table-bordered">
+                                                <tbody>
+                                                    {% for recoleccion in tipo.recolecciones %}
+                                                        <tr>
+                                                            <td>
+                                                                {% if recoleccion.recoleccionContenedor or recoleccion.recoleccionVolqueta %}
+                                                                    <div class="col col-md-6">
+                                                                        <div>
+                                                                            <strong>
+                                                                                {{recoleccion.recoleccionContenedor?"Contenedor : "~recoleccion.recoleccionContenedor.contenedor:''}}
+                                                                                {{recoleccion.recoleccionVolqueta?"Volqueta : "~recoleccion.recoleccionVolqueta.volqueta:''}}
+                                                                            </strong>
+                                                                        </div>
+                                                                        <div>
+                                                                            <strong>Volumen M<sup>3</sup></strong> : {{recoleccion.recoleccionContenedor?recoleccion.recoleccionContenedor.volumen:''}}{{recoleccion.recoleccionVolqueta?recoleccion.recoleccionVolqueta.volumen:''}}
+                                                                        </div>
+                                                                        <div>
+                                                                            <strong>Cantidad :</strong> {{recoleccion.recoleccionContenedor?recoleccion.recoleccionContenedor.cantidad:''}}{{recoleccion.recoleccionVolqueta?recoleccion.recoleccionVolqueta.cantidad:''}}
+                                                                        </div> 
+                                                                    </div>
+                                                                {% endif %}
+                                                                <div class="col col-md-6">
+                                                                    <div>
+                                                                        <strong>Manifiesto de transporte:</strong>
+                                                                        {% if recoleccion.manifiestoTransporte%}
+                                                                            <a href="{{recoleccion.manifiestoTransporte}}" target="_blank">
+                                                                                Descargar <i class="fa fa-download"></i>
+                                                                            </a>
+                                                                        {% else %}
+                                                                            No fue subido
+                                                                        {% endif %}
+                                                                    </div>
+                                                                    <div>
+                                                                        <strong>Fecha de programación: </strong> {{recoleccion.fechaProgramacion |date('d-m-Y')}}
+                                                                    </div>
+                                                                    <div>
+                                                                        <strong>Fecha de recolección ejecutada: </strong> {{recoleccion.fechaRecoleccionEjecutada |date('d-m-Y')}}
+                                                                    </div>
+                                                                </div>
+                                                                <table class="table table-bordered">
+                                                                    <thead>
+                                                                        <tr class="sonata-ba-view-title">
+                                                                            <th colspan="2"> 
+                                                                                Residuos
+                                                                            </th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        {% for residuoTransporte in recoleccion.residuos%}
+                                                                            {% set totalPeso = totalPeso + residuoTransporte.peso %}
+                                                                            {% set totalPrecio = totalPrecio + (residuoTransporte.peso*residuoTransporte.precio) %}
+                                                                            <tr>
+                                                                                <th>{{residuoTransporte.residuo}}</th>
+                                                                                <td>
+                                                                                    <table>
+                                                                                        <thead>
+                                                                                            <tr>
+                                                                                                <th class="titulo_programacion">Densidad</th>
+                                                                                                <th class="titulo_programacion">Peso en Kg</th>
+                                                                                                <th class="titulo_programacion">Precio</th>
+                                                                                                <th class="titulo_programacion">Total</th>
+                                                                                            </tr>
+                                                                                        </thead>
+                                                                                        <tbody>
+                                                                                            <tr>
+                                                                                                <td>{{residuoTransporte.densidad?residuoTransporte.densidad:'No aplica'}}</td>
+                                                                                                <td>{{residuoTransporte.peso}}</td>
+                                                                                                <td>$<span class="precio">{{residuoTransporte.precio}}</span></td>
+                                                                                                <td>$<span class="precio">{{(residuoTransporte.peso*residuoTransporte.precio)}}</span></td>
+                                                                                            </tr>
+                                                                                        </tbody>
+                                                                                    </table>
+                                                                                </td>
+                                                                                <th>
+                                                                                    Empresa recolectora de residuos:
+                                                                                </th>
+                                                                                <td>
+                                                                                    {{residuoTransporte.empresaRecolectoraResiduos}}
+                                                                                </td> 
+                                                                            </tr>
+                                                                        {% endfor %}
+                                                                    </tbody>
+                                                                </table>
+                                                            </td>
+                                                        </tr>
+                                                    {% endfor%}
+                                                </tbody>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td>
+                                            <strong>Certificado de disposicion:</strong>
+                                            {% if tipo.certificadoDisposicion%}
+                                                <a href="{{tipo.certificadoDisposicion}}" target="_blank">Descargar <i class="fa fa-download"></i></a>
+                                                {% else %}
+                                                <i class="fa fa-warning" style="color:red" data-toggle="tooltip" data-placement="top" title="No ha subido el certificado de disposición"></i>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                <tr>
+                                    <th>Total</th>
+                                    <td>
+                                        <table>
+                                            <thead>
+                                                <tr>
+                                                    <th>Total Peso en Kg</th>
+                                                    <th>Total Precio</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td><span class="precio">{{totalPeso}}</span></td>
+                                                    <td>$<span class="precio">{{totalPrecio}}</span></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                <tr class="sonata-ba-view-container">
+                    <th>¿Pesado en centro de costo?</th>
+                    <td>{{object.pesadoEnCentroRecoleccion?"Sí":"No"}}</td>
+                </tr>
+                <tr class="sonata-ba-view-container">
+                    <th>Observación</th>
+                    <td>{{object.observacion}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

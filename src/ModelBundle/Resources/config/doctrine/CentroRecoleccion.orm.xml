@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping 
+    xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd"
+    xmlns:gedmo="http://gediminasm.org/schemas/orm/doctrine-extensions-mapping">
+    
+    <entity repository-class="ModelBundle\Entity\CentroRecoleccionRepository" name="ModelBundle\Entity\CentroRecoleccion" table="centro_recoleccion">
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO"/>
+        </id>
+        
+        <field name="nombre" type="string" column="nombre" length="150"/>
+        <field name="nombreContacto" type="string" column="nombreContacto" length="255" nullable="1"/>
+        <field name="cargoContacto" type="string" column="cargoContacto" length="150" nullable="1"/>
+        <field name="activo" type="boolean" column="activo"/>
+        <field name="slug" type="string" length="150" unique="true">
+            <gedmo:slug unique="true" style="lower" updatable="false" separator="_" fields="nombre" />
+        </field>
+        <field name="direccion" type="string" column="direccion" length="150"/>
+        <field name="telefono" type="string" column="telefono"/>
+        <field name="celular" type="string" column="celular" nullable="1"/>
+        
+        <!--INICIO Datos tipo de cliente-->
+        <field name="numero_empleados" type="integer" column="numero_empleados" nullable="1"/>
+        <field name="numero_camillas" type="integer" column="numero_camillas" nullable="1"/>
+        <field name="numero_locales" type="integer" column="numero_locales" nullable="1"/>
+        <field name="numero_apartamentos" type="integer" column="numero_apartamentos" nullable="1"/>
+        <field name="numero_promedio_habitantes_apartamento" type="integer" column="numero_promedio_habitantes_apartamento" nullable="1"/>
+        <field name="numero_torres" type="integer" column="numero_torres" nullable="1"/>
+        <field name="numero_estudiantes" type="integer" column="numero_estudiantes" nullable="1"/>
+        <!--FIN Datos tipo de cliente-->
+        
+        <many-to-one field="cliente" target-entity="ModelBundle\Entity\Cliente" inversed-by="centros_recoleccion" orphan-removal="true">
+            <join-column name="cliente_id" referenced-column-name="id" on-delete="restrict" on-update="cascade" nullable="0"/>
+        </many-to-one>
+        
+        <one-to-many field="capacitaciones" target-entity="ModelBundle\Entity\Capacitacion" mapped-by="centro_recoleccion" orphan-removal="true">
+            <cascade>
+                <cascade-persist/>
+            </cascade>
+            <order-by>
+                <order-by-field name="id" direction="ASC" />
+            </order-by>
+        </one-to-many>
+        
+        <one-to-many field="programaciones" target-entity="ModelBundle\Entity\Programacion" mapped-by="centro_recoleccion" orphan-removal="true">
+            <cascade>
+                <cascade-persist/>
+            </cascade>
+            <order-by>
+                <order-by-field name="id" direction="ASC" />
+            </order-by>
+        </one-to-many>
+        
+        <one-to-many field="seguimientos" target-entity="ModelBundle\Entity\SeguimientoPMIRS" mapped-by="centro_recoleccion" orphan-removal="true">
+            <cascade>
+                <cascade-persist/>
+            </cascade>
+            <order-by>
+                <order-by-field name="id" direction="ASC" />
+            </order-by>
+        </one-to-many>
+         <field name="fechaCreacion" type="datetime">
+            <gedmo:timestampable on="create"/>
+        </field>
+        
+        <field name="fechaActualizacion" type="datetime">
+            <gedmo:timestampable on="update"/>
+        </field>
+    </entity>
+</doctrine-mapping>

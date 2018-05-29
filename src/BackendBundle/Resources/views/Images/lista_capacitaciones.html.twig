@@ -1,0 +1,13 @@
+<td>
+    {% if object.archivoCapacitacion %}
+        {% if object.archivoCapacitacion|slice(-4) in ['.png', '.jpg', '.gif', '.bmp', '.tiff', '.jpeg'] %}
+            <a href="{{ object.archivoCapacitacion }}" target="_blank" class="imagen"> 
+                Ver archivo
+            </a>
+        {% else %}
+            <a href="{{ object.archivoCapacitacion }}" target="_blank" class="popup_documento">
+                Ver archivo
+            </a>
+        {% endif %}
+    {% endif %}
+</td>

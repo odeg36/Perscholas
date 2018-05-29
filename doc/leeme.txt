@@ -1,0 +1,7 @@
+Ejecutar cron de los commands:
+
+0 1 * * * /ruta/a/la/raiz/del/proyecto/web/uploads/ rm -rf temp/*
+
+0 1 * * * /ruta/a/la/raiz/del/proyecto/ php app/console cron:generarFacturas
+
+0 1 * * * /ruta/a/la/raiz/del/proyecto/ php app/console cron:verificarDisposicion

@@ -1,0 +1,283 @@
+<?xml version="1.0"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file source-language="en" datatype="plaintext" original="file.ext">
+        <body>
+            <trans-unit id="1">
+                <source>User List</source>
+                <target>Lista de usuarios</target>
+            </trans-unit>
+            <trans-unit id="2">
+                <source>ROLE_SONATA_ADMIN</source>
+                <target>Super administrador</target>
+            </trans-unit>
+            <trans-unit id="3">
+                <source>ROLE_GESTOR</source>
+                <target>Gestor ambiental</target>
+            </trans-unit>
+            <trans-unit id="4">
+                <source>ROLE_CLIENTE</source>
+                <target>Cliente</target>
+            </trans-unit>
+            <trans-unit id="5">
+                <source>ROLE_USER</source>
+                <target>Usuario</target>
+            </trans-unit>
+            <trans-unit id="6">
+                <source>Username</source>
+                <target>Nombre de usuario</target>
+            </trans-unit>
+            <trans-unit id="7">
+                <source>Email</source>
+                <target>Correo electrónico</target>
+            </trans-unit>
+            <trans-unit id="8">
+                <source>Firstname</source>
+                <target>Nombre(s)</target>
+            </trans-unit>
+            <trans-unit id="9">
+                <source>Lastname</source>
+                <target>Apellido(s)</target>
+            </trans-unit>
+            <trans-unit id="10">
+                <source>Phone</source>
+                <target>Teléfono</target>
+            </trans-unit>
+            <trans-unit id="11">
+                <source>Enabled</source>
+                <target>¿Habilitado?</target>
+            </trans-unit>
+            <trans-unit id="12">
+                <source>Document Id</source>
+                <target>Cédula</target>
+            </trans-unit>
+            <trans-unit id="13">
+                <source>Roles</source>
+                <target>Roles</target>
+            </trans-unit>
+            <trans-unit id="14">
+                <source>Plain Password</source>
+                <target>Contraseña</target>
+            </trans-unit>
+            <trans-unit id="15">
+                <source>forgotten_password</source>
+                <target>Recuperar contraseña</target>
+            </trans-unit>
+            <trans-unit id="16">
+                <source>Bad credentials.</source>
+                <target>El usuario o contraseña no son correctas.</target>
+            </trans-unit>
+            <trans-unit id="17">
+                <source>Sede List</source>
+                <target>Lista centro de costos</target>
+            </trans-unit>
+            <trans-unit id="18">
+                <source>Cliente List</source>
+                <target>Lista de clientes</target>
+            </trans-unit>
+            <trans-unit id="19">
+                <source>Alerta List</source>
+                <target>Lista de alertas</target>
+            </trans-unit>
+            <trans-unit id="20">
+                <source>Reporte List</source>
+                <target>Lista de reportes</target>
+            </trans-unit>
+            <trans-unit id="21">
+                <source>Tarifa Descuento List</source>
+                <target>Lista de tarifas y descuentos</target>
+            </trans-unit>
+            <trans-unit id="22">
+                <source>Capacitacion List</source>
+                <target>Lista de capacitaciones</target>
+            </trans-unit>
+            <trans-unit id="23">
+                <source>Facturacion List</source>
+                <target>Lista de facturaciones</target>
+            </trans-unit>
+            <trans-unit id="24">
+                <source>Encuesta Seguimiento P M I R S List</source>
+                <target>Lista de check List PMIRS</target>
+            </trans-unit>
+            <trans-unit id="25">
+                <source>Seguimiento P M I R S List</source>
+                <target>Lista de seguimientos PMIRS</target>
+            </trans-unit>
+            <trans-unit id="26">
+                <source>Forma Pago List</source>
+                <target>Lista de formas de pago</target>
+            </trans-unit>
+            <trans-unit id="27">
+                <source>Tipo Cliente List</source>
+                <target>Lista de tipos de clientes</target>
+            </trans-unit>
+            <trans-unit id="28">
+                <source>Tipo Alerta List</source>
+                <target>Lista de tipos de alertas</target>
+            </trans-unit>
+            <trans-unit id="29">
+                <source>Tipo Capacitacion List</source>
+                <target>Lista de tipos de capacitaciones</target>
+            </trans-unit>
+            <trans-unit id="30">
+                <source>Tipo Soporte List</source>
+                <target>Lista de tipos de soportes</target>
+            </trans-unit>
+            <trans-unit id="31">
+                <source>Recoleccion List</source>
+                <target>Lista de recolecciones</target>
+            </trans-unit>
+            <trans-unit id="32">
+                <source>Disposicion List</source>
+                <target>Lista de disposiciones</target>
+            </trans-unit>
+            <trans-unit id="33">
+                <source>Residuo List</source>
+                <target>Lista de residuos</target>
+            </trans-unit>
+            <trans-unit id="34">
+                <source>Soporte List</source>
+                <target>Lista de soportes</target>
+            </trans-unit>
+            <trans-unit id="35">
+                <source>Personal data</source>
+                <target>Datos personales</target>
+            </trans-unit>
+            <trans-unit id="36">
+                <source>Permissions</source>
+                <target>Permisos</target>
+            </trans-unit>
+            <trans-unit id="37">
+                <source>Locked</source>
+                <target>¿Bloquedo?</target>
+            </trans-unit>
+            <trans-unit id="38">
+                <source>Expired</source>
+                <target>¿Expiró?</target>
+            </trans-unit>
+            <trans-unit id="39">
+                <source>Direction</source>
+                <target>Dirección</target>
+            </trans-unit>
+            <trans-unit id="40">
+                <source>Username or email</source>
+                <target>Número de cédula</target>
+            </trans-unit>
+            <trans-unit id="41">
+                <source>start</source>
+                <target>Iniciar</target>
+            </trans-unit>
+            <trans-unit id="42">
+                <source>Login</source>
+                <target>Iniciar sesión</target>
+            </trans-unit>
+            <trans-unit id="43">
+                <source>Calendar</source>
+                <target>Calendario</target>
+            </trans-unit>
+            <trans-unit id="44">
+                <source>Support</source>
+                <target>Soportes</target>
+            </trans-unit>
+            <trans-unit id="45">
+                <source>Reports</source>
+                <target>Informes</target>
+            </trans-unit>
+            <trans-unit id="46">
+                <source>Billing</source>
+                <target>Facturación</target>
+            </trans-unit>
+            <trans-unit id="47">
+                <source>Created At</source>
+                <target>Fecha creación</target>
+            </trans-unit>
+            <trans-unit id="48">
+                <source>Updated At</source>
+                <target>Fecha acualización</target>
+            </trans-unit>
+            <trans-unit id="49">
+                <source>Last Login</source>
+                <target>Último ingreso</target>
+            </trans-unit>
+            <trans-unit id="50">
+                <source>Contact</source>
+                <target>Contacto</target>
+            </trans-unit>
+            <trans-unit id="51">
+                <source>Contactar</source>
+                <target>Contactar</target>
+            </trans-unit>
+            <trans-unit id="52">
+                <source>Programacion List</source>
+                <target>Lista de datos de recolección</target>
+            </trans-unit>
+            <trans-unit id="53">
+                <source>Centro Recoleccion List</source>
+                <target>Lista de centros de costo</target>
+            </trans-unit>
+            <trans-unit id="btn_create">
+                <source>btn_create</source>
+                <target>Crear</target>
+            </trans-unit>
+            <trans-unit id="54">
+                <source>Dashboard</source>
+                <target>Área de trabajo</target>
+            </trans-unit>
+            <trans-unit id="55">
+                <source>Help</source>
+                <target>Ayuda</target>
+            </trans-unit>
+            <trans-unit id="56">
+                <source>export_format_pdf</source>
+                <target>Pdf</target>
+            </trans-unit>
+            <trans-unit id="57">
+                <source>export_format_jpg</source>
+                <target>Jpg</target>
+            </trans-unit>
+            <trans-unit id="58">
+                <source>Empresa Recolectora Residuos List</source>
+                <target>Lista de empresas recolectoras</target>
+            </trans-unit>
+            <trans-unit id="59">
+                <source>Estrato List</source>
+                <target>Lista de estratos</target>
+            </trans-unit>
+            <trans-unit id="60">
+                <source>Tipo Residuo List</source>
+                <target>Lista de tipos de residuos</target>
+            </trans-unit>
+            <trans-unit id="61">
+                <source>Contenedor List</source>
+                <target>Lista de contenedores</target>
+            </trans-unit>
+            <trans-unit id="62">
+                <source>Volqueta List</source>
+                <target>Lista de vehículos</target>
+            </trans-unit>
+            <trans-unit id="63">
+                <source>Departamento List</source>
+                <target>Lista de departamentos</target>
+            </trans-unit>
+            <trans-unit id="64">
+                <source>Municipio List</source>
+                <target>Lista de municipios</target>
+            </trans-unit>
+            <trans-unit id="65">
+                <source>Zona List</source>
+                <target>Lista de zonas</target>
+            </trans-unit>
+            <trans-unit id="66">
+                <source>Manual usuario List</source>
+                <target>Lista de manuales de usuario</target>
+            </trans-unit>
+            <trans-unit id="67">
+                <source>Pregunta Frecuentre List</source>
+                <target>Lista de preguntas frecuentes</target>
+            </trans-unit>
+            <trans-unit id="68">
+                <source>Programacion Create</source>
+                <target>Crear recolección</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping 
+    xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd"
+    xmlns:gedmo="http://gediminasm.org/schemas/orm/doctrine-extensions-mapping">
+    
+    <entity repository-class="ModelBundle\Entity\PreguntaSeguimientoRepository" name="ModelBundle\Entity\PreguntaSeguimiento" table="pregunta_seguimiento">
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO"/>
+        </id>
+        <many-to-one field="pregunta" target-entity="ModelBundle\Entity\PreguntaPMIRS" inversed-by="seguimientos" orphan-removal="true">
+            <join-column name="pregunta_id" referenced-column-name="id" on-delete="restrict" on-update="cascade" nullable="0"/>
+        </many-to-one>
+        <many-to-one field="seguimiento" target-entity="ModelBundle\Entity\SeguimientoPMIRS" inversed-by="preguntas" orphan-removal="true">
+            <join-column name="seguimiento_id" referenced-column-name="id" on-delete="restrict" on-update="cascade" nullable="0"/>
+        </many-to-one>
+        <field name="cumple" type="boolean" column="cumple"/>
+        <field name="observaciones" type="text" column="observaciones"/>
+    </entity>
+</doctrine-mapping>

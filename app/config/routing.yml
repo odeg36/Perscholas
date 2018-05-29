@@ -1,0 +1,58 @@
+frontend:
+    resource: "@FrontendBundle/Resources/config/routing.yml"
+    prefix:   /
+
+backend:
+    resource: "@BackendBundle/Resources/config/routing.yml"
+    prefix:   /
+    
+fos_user_security:
+    resource: "@FOSUserBundle/Resources/config/routing/security.xml"
+
+fos_user_profile:
+    resource: "@FOSUserBundle/Resources/config/routing/profile.xml"
+    prefix: /profile
+
+fos_user_register:
+    resource: "@FOSUserBundle/Resources/config/routing/registration.xml"
+    prefix: /register
+
+fos_user_resetting:
+    resource: "@FOSUserBundle/Resources/config/routing/resetting.xml"
+    prefix: /resetting
+
+fos_user_change_password:
+    resource: "@FOSUserBundle/Resources/config/routing/change_password.xml"
+    prefix: /profile
+
+fos_user_profile_show:
+    pattern:  /user/password-recovery
+    defaults: { _controller: FrontendBundle:Default:passwordRecovery }
+    
+precio_residuo:
+    pattern:  /residuo/precio
+    defaults: { _controller: BackendBundle:Ajax:precio_residuo }
+    
+tipos_disposicion:
+    pattern:  /residuo/disposicion
+    defaults: { _controller: BackendBundle:Ajax:tipos_disposicion }
+    
+calendario_recogidas:
+    pattern:  /calendario_recogidas/{id}
+    defaults: { _controller: BackendBundle:Ajax:calendario_recogidas }
+    
+admin:
+    resource: '@SonataAdminBundle/Resources/config/routing/sonata_admin.xml'
+    prefix: /admin
+
+_sonata_admin:
+    resource: .
+    type: sonata_admin
+    prefix: /admin
+sonata:
+    resource: '@BackendBundle/Resources/config/sonata_admin.xml'
+    prefix:   /admin/
+    
+sonata_user:
+    resource: '@SonataUserBundle/Resources/config/routing/admin_security.xml'
+    prefix:   /admin

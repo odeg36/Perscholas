@@ -1,0 +1,36 @@
+{% extends "BackendBundle:Reportes:base_grafica_pdf.html.twig" %}
+{% block content %}
+    <div class="col-md-12">
+        <div>
+            <img src="{{graficaBase64}}" width="100%" height="350">
+        </div>
+    </div>
+    <div class="col-md-12">
+        <table width="400" style="border-collapse: collapse;padding:0 15px 0 15px;" border>
+            <thead>
+                <tr>
+                    <th>Tipo de residuo</th>
+                    <th>Peso en Kg</th>
+                </tr>
+            </thead>
+            <tbody>
+                {%set sumaTotal = 0 %}
+                {% for residuo,cantidad in datos[0] %} 
+                    {%set sumaTotal = sumaTotal+cantidad %}
+                    <tr>
+                        <td>{{residuo}}</td>
+                        <td><span class="peso">{{cantidad|number_format(3, ',', '.')}}</span></td>
+                    </tr>
+                {% endfor %}
+                <tr>
+                    <td>
+                        Total
+                    </td>
+                    <td>
+                        <span class="peso">{{sumaTotal|number_format(3, ',', '.')}}</span> 
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

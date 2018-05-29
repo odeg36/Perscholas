@@ -1,0 +1,100 @@
+{% extends "::base.html.twig" %}
+
+{% block body %} 
+
+    {% include "FrontendBundle:Default:navbar.html.twig" %}
+
+    <!-- S U P E R  C O N T A I N E R -->
+    <main class="super-container-grun">
+
+        <div class="home-page-grun">
+            <div class="show-grun">
+                <div class="hidden-xs col-sm-6 col-md-6 col-lg-6 show-grun_left-col">
+                    <div class="owl-carousel owl-theme">
+                        <div class="item"><img src="{{asset("bundles/frontend/images/app_show_screenshot.png") }}" alt=""></div>
+                        <div class="item"><img src="{{asset("bundles/frontend/images/app_show_screenshot.png") }}" alt=""></div>
+                        <div class="item"><img src="{{asset("bundles/frontend/images/app_show_screenshot.png") }}" alt=""></div>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 show-grun_right-col">
+                    <div class="big-logo">
+                        <img src="{{asset("bundles/frontend/images/white_logo_grun.png") }}" alt="logo Grunberta">
+                    </div>
+                    {% if app.user is not defined or app.user is null %}
+                        <div class="login-form-grun">
+                            <form class="form-horizontal" action="{{ path("fos_user_security_check") }}" method="post" role="form" class="form-horizontal" novalidate>
+                                {% if error %}
+                                    <h3><span class="glyphicon glyphicon-alert"></span> {{ error|trans({}) }}</h3>
+                                {% endif %}
+
+                                <div class="form-group">
+                                    <h3>INICIA SESIÓN</h3>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-xs-12 col-md-12">
+                                        <input type="text" class="form-control" id="username" name="_username" value="" required="required"
+                                               placeholder="{{ 'Username or email'|trans() }}"/>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-xs-12 col-md-12">
+                                        <input type="password" class="form-control" id="password" name="_password" required="required" 
+                                               placeholder="{{ 'security.login.password'|trans({}, 'FOSUserBundle')|replace({':': ''}) }}"/>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <a href="{{ path('fos_user_resetting_request') }}" class="restore-password-login">{{ 'forgotten_password'|trans({}) }}</a>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-xs-12 col-md-12">
+                                        <button type="submit" class="btn-submit-login">{{ 'start'| trans() }}</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    {% endif %}
+                    <h1>Sistema de control en la gestión de los residuos: Previene, optimiza, ahorra</h1>
+                </div>
+            </div>
+
+            {% include "FrontendBundle:Default:features.html.twig" %}
+        </div>
+        <div class="modal fade modal-decretos" id="modal-decretos" tabindex="-1" role="dialog" aria-labelledby="modal-decretos_Label">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="modal-decretos_Label">Modal title</h4>
+                    </div>
+                    <div class="modal-body">
+                        <ul>
+                            <li>Decreto principal: Decreto 2981 del 20 de Diciembre de 2013</li>
+                            <li>Decreto del Municipio de  Medellín: Decreto 0440 del 30 de Marzo de 2009</li>
+                            <li>Decreto del Municipio de Envigado:  Decreto 219 del 07 de Junio de 2013</li>
+                            <li>Decreto del Municipio de Envigado:  Decreto 219 del 07 de Junio de 2013</li>
+                            <li>Decreto del Municipio de Itagüí: Decreto 734 del 25 de junio de 2013</li>
+                            <li>Programa de la OCDE: Objetivos-Metas Agenda 2030 Desarrollo Sostenible</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% include "FrontendBundle:Default:footer.html.twig" %}
+    </main>   
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        (function ($) {
+            "use strict";
+            $(".owl-carousel").owlCarousel({
+                margin: 0,
+                autoplay: true,
+                autoplayTimeout: 4000,
+                autoplayHoverPause: true,
+                loop: true,
+                items: 1
+            });
+        }(jQuery));
+    </script>
+{% endblock %}

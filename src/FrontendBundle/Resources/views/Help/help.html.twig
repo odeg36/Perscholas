@@ -1,0 +1,74 @@
+{% extends "::base.html.twig" %}
+
+{% block body %} 
+
+    {% include "FrontendBundle:Default:navbar.html.twig" %}
+
+    <!-- S U P E R  C O N T A I N E R -->
+    <main class="super-container-grun">
+
+        <div class="container-on-app-grun">
+            <!-- controller on app -->
+            <div class="col-xs-12 col-md-12 col-md-12 controller-on-app">
+
+                <div class="controller-on-app_left">
+
+                </div>
+
+                <div class="controller-on-app_right">
+                    {#<form action="">
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="Search for...">
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" type="button">Go!</button>
+                            </span>
+                        </div>
+                    </form>#}
+                </div>
+            </div>
+            <!-- help grun -->
+            <section class="margins-on-app help-grun">
+                {% if tipo == "preguntas"%}
+                    <div class="panel-group accordeon-grun" id="accordion" role="tablist" aria-multiselectable="true">
+                        {% for key, pregunta in objetos %}
+                            <div class="panel panel-default">
+                                <div class="panel-heading" role="tab" >
+                                    <h4 class="panel-title">
+                                        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#{{key}}" aria-expanded="true" aria-controls="collapseOne">
+                                            {{pregunta.pregunta}}
+                                        </a>
+                                    </h4>
+                                </div>
+                                <div id="{{key}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+                                    <div class="panel-body">
+                                        {{pregunta.respuesta}}
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    
+                    <div class="panel-group accordeon-grun" id="accordion" role="tablist" aria-multiselectable="true">
+                        {% for key, manual in objetos %}
+                            <div class="panel panel-default">
+                                <div class="panel-heading" role="tab" >
+                                    <h4 class="panel-title">
+                                        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#{{key}}" aria-expanded="true" aria-controls="collapseOne">
+                                            {{manual.interaccion}}
+                                        </a>
+                                    </h4>
+                                </div>
+                                <div id="{{key}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+                                    <div class="panel-body">
+                                        {{manual.respuesta}}
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </section>
+        </div>
+    </main>
+{% endblock %}

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping 
+    xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd"
+    xmlns:gedmo="http://gediminasm.org/schemas/orm/doctrine-extensions-mapping">
+    
+    <entity repository-class="ModelBundle\Entity\ClienteRepository" name="ModelBundle\Entity\Cliente" table="cliente">
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO"/>
+        </id>
+        
+        <field name="nombre" type="string" column="nombre"/>
+        <field name="direccion" type="string" column="direccion" length="150"/>
+        <field name="indicativo" type="string" column="indicativo"/>
+        <field name="telefono" type="string" column="telefono"/>
+        <field name="celular" type="string" column="celular"/>
+        <field name="nit" type="string" column="nit"/>
+        <field name="correo_electronico" type="string" column="correo_electronico" length="150"/>
+        <field name="nombre_replegal" type="string" column="nombre_replegal" nullable="1" length="250"/>
+        <field name="cedula_replegal" type="string" column="cedula_replegal" nullable="1" length="50"/>
+        <field name="observaciones" type="text" column="observaciones" nullable="1"/>
+        <field name="exentopago" type="boolean" column="exentopago" nullable="1"/>
+        <field name="slug" type="string" length="150" unique="true">
+            <gedmo:slug unique="true" style="lower" updatable="false" separator="_" fields="nombre" />
+        </field>
+        <many-to-one field="tipoCliente" target-entity="ModelBundle\Entity\TipoCliente" inversed-by="clientes" orphan-removal="true">
+            <join-column name="tipo_cliente_id" referenced-column-name="id" on-delete="restrict" on-update="cascade" nullable="0"/>
+        </many-to-one>
+        
+        <many-to-one field="municipio" target-entity="ModelBundle\Entity\Municipio" inversed-by="clientes">
+            <join-column name="municipio_id" referenced-column-name="id"/>
+        </many-to-one>
+        
+        <many-to-one field="zona" target-entity="ModelBundle\Entity\Zona" inversed-by="clientes">
+            <join-column name="zona_id" referenced-column-name="id"/>
+        </many-to-one>
+        
+        <many-to-one field="estrato" target-entity="ModelBundle\Entity\Estrato" inversed-by="clientes" orphan-removal="true">
+            <join-column name="estrato_id" referenced-column-name="id" on-delete="restrict" on-update="cascade" nullable="0"/>
+        </many-to-one>
+        
+        <many-to-one field="forma_pago" target-entity="ModelBundle\Entity\FormaPago" inversed-by="clientes" orphan-removal="true">
+            <join-column name="forma_pago_id" referenced-column-name="id" on-delete="restrict" on-update="cascade" nullable="1"/>
+        </many-to-one>
+        <field name="valor_a_pagar" type="float" column="valor_a_pagar" nullable="1"/>
+        <field name="fecha_inicio_facturacion" type="datetime" column="fecha_inicio_facturacion" nullable="1"/>
+        
+        <one-to-many field="usuarios" target-entity="ModelBundle\Entity\User" mapped-by="cliente" orphan-removal="true">
+            <cascade>
+                <cascade-persist/>
+            </cascade>
+            <order-by>
+                <order-by-field name="id" direction="ASC" />
+            </order-by>
+        </one-to-many>
+        
+        <one-to-many field="centros_recoleccion" target-entity="ModelBundle\Entity\CentroRecoleccion" mapped-by="cliente" orphan-removal="true">
+            <cascade>
+                <cascade-persist/>
+            </cascade>
+            <order-by>
+                <order-by-field name="id" direction="ASC" />
+            </order-by>
+        </one-to-many>
+        <one-to-many field="soportes" target-entity="ModelBundle\Entity\Soporte" mapped-by="cliente" orphan-removal="true">
+            <cascade>
+                <cascade-persist/>
+            </cascade>
+            <order-by>
+                <order-by-field name="id" direction="ASC" />
+            </order-by>
+        </one-to-many>
+        <one-to-many field="facturas" target-entity="ModelBundle\Entity\Facturacion" mapped-by="cliente" orphan-removal="true">
+            <cascade>
+                <cascade-persist/>
+            </cascade>
+            <order-by>
+                <order-by-field name="id" direction="ASC" />
+            </order-by>
+        </one-to-many>
+        <field name="fechaCreacion" type="datetime" column="fecha_creacion">
+            <gedmo:timestampable on="create"/>
+        </field>
+        
+        <field name="fechaActualizacion" type="datetime" column="fecha_actualizacion">
+            <gedmo:timestampable on="update"/>
+        </field>
+    </entity>
+</doctrine-mapping>

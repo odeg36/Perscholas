@@ -1,0 +1,20 @@
+parameters:
+#    app_model.example.class: AppModelBundle\Example
+
+services:
+    app.twig_extension_getContenedores:
+        class: ModelBundle\Twig\Contenedores
+        tags:
+            - { name: twig.extension }
+        arguments: [@service_container]
+        
+    app.twig_extension_getVolquetas:
+        class: ModelBundle\Twig\Volquetas
+        tags:
+            - { name: twig.extension }
+        arguments: [@service_container]
+        
+    app.generar_factura:
+        class: ModelBundle\Service\GenerarFactura
+        arguments: [@service_container]
+    

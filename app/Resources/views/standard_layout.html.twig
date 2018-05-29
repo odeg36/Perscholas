@@ -1,0 +1,27 @@
+{% extends "SonataAdminBundle::standard_layout.html.twig" %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{asset("/bundles/sonatacore/vendor/moment/locale/" ~ app.request.locale ~ ".js" ) }}"></script>
+    <script type="text/javascript" src="{{asset("/bundles/backend/js/jscolor.js" ) }}"></script>
+{% endblock %}
+
+{% block sonata_header %}
+    {% if app.user is not null %}
+        {{ parent() }}
+    {% endif %}
+{% endblock %}
+
+{% block sonata_left_side %}
+    {% if app.user is not null %}
+        {{ parent() }}
+    {% endif %}
+{% endblock %}
+    
+{% block side_bar_after_nav %}
+    <p class="text-center small" style="border-top: 1px solid #444444; padding-top: 10px"><a href="/" rel="noreferrer" target="_blank">Inicio</a></p>
+{% endblock %}

@@ -1,0 +1,66 @@
+{% extends "::base.html.twig" %}
+
+{% block body %} 
+
+    {% include "FrontendBundle:Default:navbar.html.twig" %}
+
+    <!-- S U P E R  C O N T A I N E R -->
+    <main class="super-container-grun">
+
+        <div class="container-on-app-grun">
+            <!-- controller on app -->
+            <div class="col-xs-12 col-md-12 col-md-12 controller-on-app">
+            </div>
+            <!-- help grun -->
+            <section class="margins-on-app help-grun">
+                <table id="tabla" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                    <thead>
+                        <tr>
+                            <th>Fecha de facturación</th>
+                            <th>Valor a pagar</th>
+                            <th>Factura</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for factura in facturas %}
+                            <tr>
+                                <td>{{ factura.fechaCreacion|date('Y-m-d') }}</td>
+                                <td>$<span class="precio">{{ factura.valorAPagar }}</span></td>
+                                <td><a href="{{factura.factura}}" target="_blank">Descargar <i class="fa fa-download"></i></a></td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th>Fecha de facturación</th>
+                            <th>Valor a pagar</th>
+                            <th>Factura</th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </section>
+        </div>
+
+    </main>
+
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        $(function () {
+            $("#id_sede").on("change", function () {
+                var id_sede = $(this).val();
+                if (id_sede != 0)
+                {
+                    window.location = "{{path('frontend_facturacion')}}" + "/" + id_sede;
+                }
+            });
+            $(document).ready(function () {
+                $('.precio').each(function (k, v) {
+                    var show = true;
+                    $(v).text(format($(v).text(), show));
+                });
+            });
+        });
+    </script>
+{% endblock %}

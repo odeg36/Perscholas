@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping 
+    xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd"
+    xmlns:gedmo="http://gediminasm.org/schemas/orm/doctrine-extensions-mapping">
+    
+    <entity repository-class="ModelBundle\Entity\ZonaRepository" name="ModelBundle\Entity\ManualUsuario" table="manual_usuario">
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO"/>
+        </id>
+        <field name="interaccion" type="string" length="250" column="interaccion"/>
+        <field name="respuesta" type="text" column="respuesta"/>
+        <field name="roles" type="array" column="roles"/>
+        
+        <field name="fechaCreacion" type="datetime" column="fecha_creacion">
+            <gedmo:timestampable on="create"/>
+        </field>
+        <field name="fechaActualizacion" type="datetime" column="fecha_actualizacion">
+            <gedmo:timestampable on="update"/>
+        </field>
+    </entity>
+</doctrine-mapping>

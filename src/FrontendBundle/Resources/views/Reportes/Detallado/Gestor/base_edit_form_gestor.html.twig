@@ -1,0 +1,128 @@
+<form
+    class="form-horizontal"
+    id="form_gestor"
+    role="form"
+    action="{{ path("frontend_reporte_detallado") }}"
+    method="POST"
+    >
+    {% if formGestor.vars.errors|length > 0 %}
+        <div class="sonata-ba-form-error">
+            {{ form_errors(formGestor) }}
+        </div>
+    {% endif %}
+    <div class="box box-success">
+        <div class="box-header">
+            <h4 class="box-title">
+                Reporte de cantidad de residuos recolectados por gestor ambiental
+            </h4>
+        </div>
+        <div class="box-body">
+            <div class="sonata-ba-collapsed-fields">
+                <div class="form-group" id="sonata-ba-field-container-s57bdc5589c151_usuario">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class=" sonata-ba-field">
+                                {{form_row(formGestor.fecha_inicial)}}
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class=" sonata-ba-field">
+                                {{form_row(formGestor.fecha_final)}}
+                            </div>
+                        </div>
+                        <div class="col-md-6" style="display: none">
+                            <div class=" sonata-ba-field">
+                                {{form_row(formGestor.cliente)}}
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class=" sonata-ba-field">
+                                <div>
+                                    <label for="r_detallado_fechas_form_gestor_ambiental">Gestor ambiental</label>
+                                    <select id="r_detallado_gestor_form_gestor_ambiental" name="r_detallado_gestor_form[gestor_ambiental][]" class="form-control" tabindex="-1">
+                                         <option value=""></option>
+                                        {% for gestor in gestores %}
+                                            <option value="{{gestor.id}}">{{gestor.username}} - {{app.user.cliente}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class=" sonata-ba-field">
+                                <button class="btn btn-primary" type="submit" name="generar" value="true" style="margin-top: 5%;"><i class="fa fa-signal"></i> Generar</button>
+                                <button class="btn btn-danger" type="submit" name="pdf" value="true" style="margin-top: 5%;" disabled><i class="fa fa-file-pdf-o"></i> PDF</button>
+                                <button class="btn btn-success" type="submit" name="excel" value="true" style="margin-top: 5%;" disabled><i class="fa fa-file-excel-o"></i> Excel</button>
+                                <a class="btn btn-default" name="restablecer" style="margin-top: 5%;" onclick="resetForm(this);">Restablecer</a>
+                            </div>
+                        </div>
+                        <div id="graficaGestor">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{ form_rest(formGestor) }}
+</form>
+<script>
+    function setCentrosCosto(val) {
+            var data = {
+                cliente_id: val
+            };
+            if(val != ""){
+            $.ajax({
+                type: 'post',
+                url: '{{ path("ajax_centros_recoleccion") }}',
+                data: data,
+                beforeSend: function (xhr) {
+                    $('#div_carga').show();
+                },
+                complete: function (jqXHR, textStatus) {
+                    $('#div_carga').hide();
+                },
+                success: function (data) {
+                    var $gestor_selector = $('#r_checklist_form_centro_costo');
+                    for (var i = 0, total = data.length; i < total; i++) {
+                        $gestor_selector.html('<option value="' + data[i].id + '">' + data[i].name + '</option>');
+                    }
+                }
+            });
+        }
+    }
+   {# $(document).ready(function () {
+        setCentrosCosto($("#r_checklist_form_cliente").val());
+    });#}
+    $("#r_checklist_form_cliente").change(function () {
+        setCentrosCosto($(this).val());
+    });
+    $('#r_checklist_form_centro_costo').change(function () {
+        $('input#r_checklist_form_centro_costo').val($(this).val());
+    });
+    $('#form_gestor').submit(function () {
+        var valGestor = $('#r_detallado_gestor_form_gestor_ambiental').val();
+        if (valGestor) {
+            $('#r_detallado_gestor_form_gestor_ambiental').parent().removeClass('has-error');
+            var $btn = $(document.activeElement);
+            if (
+                    /* there is an activeElement at all */
+                    $btn.length &&
+                    /* it's a child of the form */
+                    $(this).has($btn) &&
+                    /* it's really a submit element */
+                    $btn.is('button[type="submit"], input[type="submit"], input[type="image"]') &&
+                    /* it has a "name" attribute */
+                    $btn.is('[name]') &&
+                    ($btn.attr('name') == "pdf" || $btn.attr('name') == "excel")
+                    ) {
+            } else {
+                options.target = '#graficaGestor';
+                $('#form_gestor').ajaxSubmit(options);
+                return false;
+            }
+        } else {
+            $('#r_detallado_gestor_form_gestor_ambiental').parent().addClass('has-error');
+            return false;
+        }
+    });
+</script>

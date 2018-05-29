@@ -1,0 +1,21 @@
+<meta charset="UTF-8">
+<h1>Reporte de capacitaciones</h1>
+<br>
+<table width="600" border="1">
+    <tr>
+        <th>Fecha</th>
+        <th>Gestor</th>
+        <th>Asistentes</th>
+        <th>Tipo de capacitación</th>
+        <th>Archivo</th>
+    </tr>
+    {% for capacitacion in capacitaciones %}
+        <tr>
+            <td>{{ capacitacion.fechaCapacitacion|date('Y-m-d') }}</td>
+            <td>{{ capacitacion.gestor }}</td>
+            <td>{{ capacitacion.numeroAsistentes }}</td>
+            <td>{{ capacitacion.tipoCapacitacion }}</td>
+            <td><a href="{{ capacitacion.archivoCapacitacion }}" target="_blank">Ver archivo</a></td>
+        </tr>
+    {% endfor %}
+</table>

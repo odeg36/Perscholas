@@ -1,0 +1,205 @@
+{% block form %}
+    {{ sonata_block_render_event('sonata.admin.edit.form.top', { 'admin': admin, 'object': object }) }}
+
+    {% set url = admin.id(object) is not null ? 'edit' : 'create' %}
+
+    {% if not admin.hasRoute(url)%}
+        <div>
+            {{ "form_not_available"|trans({}, "SonataAdminBundle") }}
+        </div>
+    {% else %}
+        <form
+            {% if admin_pool.getOption('form_type') == 'horizontal' %}class="form-horizontal"{% endif %}
+            role="form"
+            action="{{ admin.generateUrl(url, {'id': admin.id(object), 'uniqid': admin.uniqid, 'subclass': app.request.get('subclass')}) }}" {{ form_enctype(form) }}
+            method="POST"
+            {% if not admin_pool.getOption('html5_validate') %}novalidate="novalidate"{% endif %}
+            >
+            {% if form.vars.errors|length > 0 %}
+                <div class="sonata-ba-form-error">
+                    {{ form_errors(form) }}
+                </div>
+            {% endif %}
+            <div class="box box-success">
+                <div class="box-header">
+                    <h3 class="box-title">
+                        Datos basicos
+                    </h3>
+                </div>
+                <div class="box-body">
+                    <div class="sonata-ba-collapsed-fields">
+                        <div class="form-group" id="sonata-ba-field-container-s57bdc5589c151_usuario">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    {{ form_row(form.cliente) }}
+                                    {{ form_row(form.nombre) }}
+                                    {{ form_row(form.nombreContacto) }}
+                                    {{ form_row(form.cargoContacto) }}
+                                    {{ form_row(form.activo) }}
+                                    {{ form_label(form.direccion) }}
+                                    <div class="form-group" id="sonata-ba-field-container-centro_recoleccion_direccion">
+                                        <div class="sonata-ba-field">
+                                            <div style="padding-left: 0;" class="col col-md-1 {{form.direccion_format.tipo_via.vars.errors|length > 0 ? 'has-error':''}}">
+                                                {{ form_widget(form.direccion_format.tipo_via) }}
+                                                {% if form.direccion_format.tipo_via.vars.errors|length > 0 %}
+                                                    <div class="sonata-ba-form-error">
+                                                        {{ form_errors(form.direccion_format.tipo_via) }}
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                            <div class="col col-md-1 {{form.direccion_format.numero_via.vars.errors|length > 0 ? 'has-error':''}}">
+                                                {{ form_widget(form.direccion_format.numero_via) }}
+                                                {% if form.direccion_format.numero_via.vars.errors|length > 0 %}
+                                                    <div class="sonata-ba-form-error">
+                                                        {{ form_errors(form.direccion_format.numero_via) }}
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                            <div class="col col-md-1 {{form.direccion_format.letra_prefijo.vars.errors|length > 0 ? 'has-error':''}}">
+                                                {{ form_widget(form.direccion_format.letra_prefijo) }}
+                                                {% if form.direccion_format.letra_prefijo.vars.errors|length > 0 %}
+                                                    <div class="sonata-ba-form-error">
+                                                        {{ form_errors(form.direccion_format.letra_prefijo) }}
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                            <div class="col col-md-1 {{form.direccion_format.prefijo.vars.errors|length > 0 ? 'has-error':''}}">
+                                                {{ form_widget(form.direccion_format.prefijo) }}
+                                                {% if form.direccion_format.prefijo.vars.errors|length > 0 %}
+                                                    <div class="sonata-ba-form-error">
+                                                        {{ form_errors(form.direccion_format.prefijo) }}
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                            <div class="col col-md-1 {{form.direccion_format.cuadrante.vars.errors|length > 0 ? 'has-error':''}}">
+                                                {{ form_widget(form.direccion_format.cuadrante) }}
+                                                {% if form.direccion_format.cuadrante.vars.errors|length > 0 %}
+                                                    <div class="sonata-ba-form-error">
+                                                        {{ form_errors(form.direccion_format.cuadrante) }}
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                            <div class="col col-md-1 {{form.direccion_format.numero_generador.vars.errors|length > 0 ? 'has-error':''}}">
+                                                {{ form_widget(form.direccion_format.numero_generador) }}
+                                                {% if form.direccion_format.numero_generador.vars.errors|length > 0 %}
+                                                    <div class="sonata-ba-form-error">
+                                                        {{ form_errors(form.direccion_format.numero_generador) }}
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                            <div class="col col-md-1 {{form.direccion_format.letra_sufijo.vars.errors|length > 0 ? 'has-error':''}}">
+                                                {{ form_widget(form.direccion_format.letra_sufijo) }}
+                                                {% if form.direccion_format.letra_sufijo.vars.errors|length > 0 %}
+                                                    <div class="sonata-ba-form-error">
+                                                        {{ form_errors(form.direccion_format.letra_sufijo) }}
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                            <div class="col col-md-1 {{form.direccion_format.sufijo.vars.errors|length > 0 ? 'has-error':''}}">
+                                                {{ form_widget(form.direccion_format.sufijo) }}
+                                                {% if form.direccion_format.sufijo.vars.errors|length > 0 %}
+                                                    <div class="sonata-ba-form-error">
+                                                        {{ form_errors(form.direccion_format.sufijo) }}
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                            <div class="col col-md-1 {{form.direccion_format.numero_placa.vars.errors|length > 0 ? 'has-error':''}}">
+                                                {{ form_widget(form.direccion_format.numero_placa) }}
+                                                {% if form.direccion_format.numero_placa.vars.errors|length > 0 %}
+                                                    <div class="sonata-ba-form-error">
+                                                        {{ form_errors(form.direccion_format.numero_placa) }}
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br/>
+                                    <br/>
+                                    {{ form_widget(form.direccion) }}
+                                    {{ form_errors(form.direccion) }}
+                                    {{ form_row(form.telefono) }}
+                                    {{ form_row(form.celular) }}
+                                    {{ form_row(form.tipo_de_cliente) }}
+                                    {% if form.numero_empleados is defined %}
+                                        {{ form_row(form.numero_empleados) }}
+                                    {% endif %}
+                                    {% if form.numero_camillas is defined %}
+                                        {{ form_row(form.numero_camillas) }}
+                                    {% endif %}
+                                    {% if form.numero_locales is defined %}
+                                        {{ form_row(form.numero_locales) }}
+                                    {% endif %}
+                                    {% if form.numero_apartamentos is defined %}
+                                        {{ form_row(form.numero_apartamentos) }}
+                                    {% endif %}
+                                    {% if form.numero_promedio_habitantes_apartamento is defined %}
+                                        {{ form_row(form.numero_promedio_habitantes_apartamento) }}
+                                    {% endif %}
+                                    {% if form.numero_torres is defined %}
+                                        {{ form_row(form.numero_torres) }}
+                                    {% endif %}
+                                    {% if form.numero_estudiantes is defined %}
+                                        {{ form_row(form.numero_estudiantes) }}
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% block formactions %}
+                {% include "BackendBundle:Default:botones.html.twig" with {'object': object} %}
+            {% endblock formactions %}
+            {{ form_rest(form) }}
+        </form>
+    {% endif%}
+    {{ sonata_block_render_event('sonata.admin.edit.form.bottom', { 'admin': admin, 'object': object }) }}
+    <script type="text/javascript">
+        {% if app.request.method == "POST" %}
+            $(document).ready(function () {
+                actualizarDireccion();
+            });
+        {% endif %}
+            function actualizarDireccion() {
+                var tipoVia = $('#centro_recoleccion_direccion_format_tipo_via').val();
+                var numeroVia = $('#centro_recoleccion_direccion_format_numero_via').val();
+                var letraPrefijo = $('#centro_recoleccion_direccion_format_letra_prefijo').val();
+                var prefijo = $('#centro_recoleccion_direccion_format_prefijo').val();
+                var cuadrante = $('#centro_recoleccion_direccion_format_cuadrante').val();
+                var numeroGenerador = $('#centro_recoleccion_direccion_format_numero_generador').val();
+                var letraSufijo = $('#centro_recoleccion_direccion_format_letra_sufijo').val();
+                var sufijo = $('#centro_recoleccion_direccion_format_sufijo').val();
+                var numeroPlaca = $('#centro_recoleccion_direccion_format_numero_placa').val();
+                var direccion = tipoVia;
+                if (numeroVia) {
+                    direccion += " " + numeroVia;
+                }
+                if (letraPrefijo) {
+                    direccion += " " + letraPrefijo;
+                }
+                if (prefijo) {
+                    direccion += " " + prefijo;
+                }
+                if (cuadrante) {
+                    direccion += " " + cuadrante;
+                }
+                if (numeroGenerador) {
+                    direccion += " # " + numeroGenerador;
+                }
+                if (letraSufijo) {
+                    direccion += " " + letraSufijo;
+                }
+                if (sufijo) {
+                    direccion += "  " + sufijo;
+                }
+                if (numeroPlaca) {
+                    direccion += " - " + numeroPlaca;
+                }
+                $('#centro_recoleccion_direccion').val(direccion);
+            }
+            $('form').submit(function(){
+                $('#{{form.cliente.vars.id}}').removeAttr('disabled');
+            });
+    </script>
+    {{ sonata_block_render_event('sonata.admin.edit.form.bottom', { 'admin': admin, 'object': object }) }}
+{% endblock %}

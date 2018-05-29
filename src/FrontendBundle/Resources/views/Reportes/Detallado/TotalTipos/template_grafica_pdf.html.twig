@@ -1,0 +1,33 @@
+{% extends "BackendBundle:Reportes:base_grafica_pdf.html.twig" %}
+{% block content %}
+    {% set totalPeso = 0%}
+    {% for residuo in datos %} 
+        {% set totalPeso = totalPeso + residuo['peso']%}
+    {% endfor %}
+    <div class="col-md-12">
+        <div>
+            <img src="{{graficaBase64}}" width="100%" height="300">
+        </div>
+    </div>
+    <div class="col-md-12">
+        <table style="border-collapse: collapse;padding:0 15px 0 15px;" border>
+            <thead>
+                <tr>
+                    <th>Tipo de residuo</th>
+                    <th>Peso en Kg</th>
+                    <th>Porcentaje</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                {% for tipo_residuo in datos %}
+                    <tr>
+                        <td>{{tipo_residuo.nombre}}</td>
+                        <td style="text-align: right"><span class="peso">{{tipo_residuo.peso|number_format(3, ',', '.')}}</span></td>
+                        <td style="text-align: right">{{(tipo_residuo.peso*100/totalPeso)|round(1)|number_format(1, ',', '.')}}%</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

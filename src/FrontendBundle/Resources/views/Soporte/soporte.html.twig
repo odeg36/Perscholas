@@ -1,0 +1,68 @@
+{% extends "::base.html.twig" %}
+
+{% block body %} 
+
+    {% include "FrontendBundle:Default:navbar.html.twig" %}
+
+    <!-- S U P E R  C O N T A I N E R -->
+    <main class="super-container-grun">
+
+        <div class="container-on-app-grun">
+            <!-- controller on app -->
+            <div class="col-xs-12 col-md-12 col-md-12 controller-on-app">
+            </div>
+            <!-- help grun -->
+            <section class="margins-on-app help-grun">
+                <table id="tabla" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                    <thead>
+                        <tr>
+                            <th>Tipo de soporte</th>
+                            <th>Descripción</th>
+                            <th>Archivo</th>
+                            <th>Fecha de creación</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for soporte in soportes %}
+                        <tr>
+                            <td>{{ soporte.tipoSoporte }}</td>
+                            <td>{{ soporte.descripcion }}</td>
+                            <td>
+                                {% if soporte.archivoSoporte != "" %}
+                                <a href="{{ '/uploads/soportes/'~ soporte.archivoSoporte }}" target="_blank">
+                                    Ver archivo
+                                </a>
+                                {% endif %}
+                            </td>
+                            <td>{{ soporte.fechaCreacion|date('Y-m-d') }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th>Tipo de soporte</th>
+                            <th>Descripción</th>
+                            <th>Archivo</th>
+                            <th>Fecha de creación</th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </section>
+        </div>
+
+    </main>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        $(function () {
+            $("#id_sede").on("change", function () {
+                var id_sede = $(this).val();
+                if(id_sede != 0)
+                {
+                    window.location = "{{path('frontend_soporte')}}"+"/"+id_sede;
+                }
+            });
+        });
+    </script>
+{% endblock %}

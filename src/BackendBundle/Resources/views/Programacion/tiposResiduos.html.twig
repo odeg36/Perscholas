@@ -1,0 +1,6 @@
+<td>
+    {% for tipo in object.tiposResiduosTransporte %}
+        <i class="fa fa-circle" style="color:#{{tipo.tipoResiduo.color}}"></i> {{tipo.tipoResiduo}}
+        <br/>
+    {% endfor %}
+</td>

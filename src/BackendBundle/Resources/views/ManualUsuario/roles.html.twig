@@ -1,0 +1,7 @@
+<td>
+    {% block field %}
+        {% for role in object.roles%}
+            {{ role | trans() }}<br>
+        {% endfor %}
+    {% endblock %}
+</td>

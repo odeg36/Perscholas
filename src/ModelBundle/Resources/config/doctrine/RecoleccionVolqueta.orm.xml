@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping 
+    xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd"
+    xmlns:gedmo="http://gediminasm.org/schemas/orm/doctrine-extensions-mapping">
+    
+    <entity repository-class="ModelBundle\Entity\RecoleccionVolquetaRepository" name="ModelBundle\Entity\RecoleccionVolqueta" table="recoleccion_volqueta">
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO"/>
+        </id>
+        
+        <one-to-one field="recoleccion" target-entity="ModelBundle\Entity\Recoleccion" inversed-by="recoleccion_volqueta" >
+            <cascade>
+                <cascade-persist/>
+            </cascade>
+            <join-column name="recoleccion_id" referenced-column-name="id" nullable="1" on-delete="SET NULL"/>
+        </one-to-one>
+        <many-to-one field="volqueta" target-entity="ModelBundle\Entity\Volqueta" inversed-by="recoleccion_volqueta" orphan-removal="true">
+            <join-column name="volqueta_id" referenced-column-name="id" on-delete="restrict" on-update="cascade" nullable="0"/>
+        </many-to-one>
+        <field name="volumen" type="float" column="volumen" />
+        <field name="cantidad" type="integer" column="cantidad" />
+        <field name="fechaCreacion" type="datetime" column="fecha_creacion">
+            <gedmo:timestampable on="create"/>
+        </field>
+        
+        <field name="fechaActualizacion" type="datetime" column="fecha_actualizacion">
+            <gedmo:timestampable on="update"/>
+        </field>
+        
+    </entity>
+</doctrine-mapping>

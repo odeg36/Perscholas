@@ -1,0 +1,163 @@
+services:
+           
+    backend.admin.user:
+        class: BackendBundle\Admin\UserAdmin
+        arguments: [~, ModelBundle\Entity\User, BackendBundle:UserAdmin]
+        tags:
+            - {name: sonata.admin, manager_type: orm, group: User, label: Usuarios}
+            
+    backend.admin.programacion:
+        class: BackendBundle\Admin\ProgramacionAdmin
+        arguments: [~, ModelBundle\Entity\Programacion, BackendBundle:ProgramacionAdmin]
+        tags:
+            - {name: sonata.admin, manager_type: orm, group: DatosDeRecoleccion, label: Datos de recolecciones}
+            
+    backend.admin.cliente:
+        class: BackendBundle\Admin\ClienteAdmin
+        arguments: [~, ModelBundle\Entity\Cliente, BackendBundle:ClienteAdmin]
+        tags:
+            - {name: sonata.admin, manager_type: orm, group: Cliente, label: Clientes}
+
+    backend.admin.centro_recoleccion:
+        class: BackendBundle\Admin\CentroRecoleccionAdmin
+        arguments: [~, ModelBundle\Entity\CentroRecoleccion, BackendBundle:CentroRecoleccionAdmin]
+        tags:
+            - {name: sonata.admin, manager_type: orm, group: Cliente, label: Centros de costo}
+            
+    backend.admin.soporte:
+        class: BackendBundle\Admin\SoporteAdmin
+        arguments: [~, ModelBundle\Entity\Soporte, BackendBundle:SoporteAdmin]
+        tags:
+            - {name: sonata.admin, manager_type: orm, group: Cliente, label: Soportes}
+
+    backend.admin.facturacion:
+        class: BackendBundle\Admin\FacturacionAdmin
+        arguments: [~, ModelBundle\Entity\Facturacion, BackendBundle:FacturacionAdmin]
+        tags:
+            - {name: sonata.admin, manager_type: orm, group: Facturacion, label: Facturación}
+
+    backend.admin.reporte:
+        class: BackendBundle\Admin\ReporteAdmin
+        arguments: [~, ModelBundle\Entity\Reporte, BackendBundle:ReporteAdmin]
+        tags:
+            - {name: sonata.admin, manager_type: orm, group: Informes, label: Reportes}
+
+    backend.admin.seguimiento_pmirs:
+        class: BackendBundle\Admin\SeguimientoPMIRSAdmin
+        arguments: [~, ModelBundle\Entity\SeguimientoPMIRS, BackendBundle:SeguimientoPMIRSAdmin]
+        tags:
+            - {name: sonata.admin, manager_type: orm, group: Pmirs, label: Seguimiento PMIRS }
+           
+    backend.admin.capacitacion:
+        class: BackendBundle\Admin\CapacitacionAdmin
+        arguments: [~, ModelBundle\Entity\Capacitacion, BackendBundle:CapacitacionAdmin]
+        tags:
+            - {name: sonata.admin, manager_type: orm, group: Capacitacion, label: Capacitaciones}
+    
+    backend.admin.tipo_cliente:
+        class: BackendBundle\Admin\TipoClienteAdmin
+        arguments: [~, ModelBundle\Entity\TipoCliente, BackendBundle:TipoClienteAdmin]
+        tags:
+            - {name: sonata.admin, manager_type: orm, group: Settings, label: Tipos de cliente}
+
+    backend.admin.estrato:
+        class: BackendBundle\Admin\EstratoAdmin
+        arguments: [~, ModelBundle\Entity\Estrato, BackendBundle:EstratoAdmin]
+        tags:
+            - {name: sonata.admin, manager_type: orm, group: Settings, label: Estratos}
+
+    backend.admin.tipo_residuo:
+        class: BackendBundle\Admin\TipoResiduoAdmin
+        arguments: [~, ModelBundle\Entity\TipoResiduo, BackendBundle:TipoResiduoAdmin]
+        tags:
+            - {name: sonata.admin, manager_type: orm, group: Settings, label: Tipos de residuo}
+
+    backend.admin.residuo:
+        class: BackendBundle\Admin\ResiduoAdmin
+        arguments: [~, ModelBundle\Entity\Residuo, BackendBundle:ResiduoAdmin]
+        tags:
+            - {name: sonata.admin, manager_type: orm, group: Settings, label: Residuos}
+
+    backend.admin.contenedor:
+        class: BackendBundle\Admin\ContenedorAdmin
+        arguments: [~, ModelBundle\Entity\Contenedor, BackendBundle:ContenedorAdmin]
+        tags:
+            - {name: sonata.admin, manager_type: orm, group: Settings, label: Contenedores}
+            
+    backend.admin.volqueta:
+        class: BackendBundle\Admin\VolquetaAdmin
+        arguments: [~, ModelBundle\Entity\Volqueta, BackendBundle:VolquetaAdmin]
+        tags:
+            - {name: sonata.admin, manager_type: orm, group: Settings, label: Vehículos}
+
+    backend.admin.disposicion:
+        class: BackendBundle\Admin\DisposicionAdmin
+        arguments: [~, ModelBundle\Entity\Disposicion, BackendBundle:DisposicionAdmin]
+        tags:
+            - {name: sonata.admin, manager_type: orm, group: Settings, label: Tipos de disposición}
+
+    backend.admin.empresa_recolectora_residuos:
+        class: BackendBundle\Admin\EmpresaRecolectoraResiduosAdmin
+        arguments: [~, ModelBundle\Entity\EmpresaRecolectoraResiduos, BackendBundle:EmpresaRecolectoraResiduosAdmin]
+        tags:
+            - {name: sonata.admin, manager_type: orm, group: Settings, label: Empresas recolectoras de residuos}
+       
+    backend.admin.forma_pago:
+        class: BackendBundle\Admin\FormaPagoAdmin
+        arguments: [~, ModelBundle\Entity\FormaPago, BackendBundle:FormaPagoAdmin]
+        tags:
+            - {name: sonata.admin, manager_type: orm, group: Settings, label: Formas de pago }
+
+    backend.admin.tipo_capacitacion:
+        class: BackendBundle\Admin\TipoCapacitacionAdmin
+        arguments: [~, ModelBundle\Entity\TipoCapacitacion, BackendBundle:TipoCapacitacionAdmin]
+        tags:
+            - {name: sonata.admin, manager_type: orm, group: Settings, label: Tipos de capacitación}
+            
+    backend.admin.tipo_soporte:
+        class: BackendBundle\Admin\TipoSoporteAdmin
+        arguments: [~, ModelBundle\Entity\TipoSoporte, BackendBundle:TipoSoporteAdmin]
+        tags:
+            - {name: sonata.admin, manager_type: orm, group: Settings, label: Tipos de soporte}
+
+    backend.admin.departamento:
+        class: BackendBundle\Admin\DepartamentoAdmin
+        arguments: [~, ModelBundle\Entity\Departamento, BackendBundle:DepartamentoAdmin]
+        tags:
+            - {name: sonata.admin, manager_type: orm, group: Settings, label: Departamentos}
+
+    backend.admin.municipio:
+        class: BackendBundle\Admin\MunicipioAdmin
+        arguments: [~, ModelBundle\Entity\Municipio, BackendBundle:MunicipioAdmin]
+        tags:
+            - {name: sonata.admin, manager_type: orm, group: Settings, label: Municipios}
+
+    backend.admin.zona:
+        class: BackendBundle\Admin\ZonaAdmin
+        arguments: [~, ModelBundle\Entity\Zona, BackendBundle:ZonaAdmin]
+        tags:
+            - {name: sonata.admin, manager_type: orm, group: Settings, label: Zonas}
+
+    backend.admin.manual_usuario:
+        class: BackendBundle\Admin\ManualUsuarioAdmin
+        arguments: [~, ModelBundle\Entity\ManualUsuario, BackendBundle:ManualUsuarioAdmin]
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: Ayuda, label: Manuales de usuario }
+
+    backend.admin.pregunta_frecuentre:
+        class: BackendBundle\Admin\PreguntaFrecuentreAdmin
+        arguments: [~, ModelBundle\Entity\PreguntaFrecuentre, BackendBundle:PreguntaFrecuentreAdmin]
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: Ayuda, label: Preguntas frecuentres }
+
+    backend.admin.componente_pmirs:
+        class: BackendBundle\Admin\ComponentePMIRSAdmin
+        arguments: [~, ModelBundle\Entity\ComponentePMIRS, BackendBundle:ComponentePMIRSAdmin]
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: admin, label: Componentes PMIRS }
+
+    backend.admin.pregunta_pmirs:
+        class: BackendBundle\Admin\PreguntaPMIRSAdmin
+        arguments: [~, ModelBundle\Entity\PreguntaPMIRS, BackendBundle:PreguntaPMIRSAdmin]
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: admin, label: PreguntaPMIRS }

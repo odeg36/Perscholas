@@ -1,0 +1,39 @@
+{% extends "BackendBundle:Reportes:base_grafica_pdf.html.twig" %}
+{% set total = 0 %}
+{% for disposicion in datos %}
+    {% set total = total + disposicion.cantidad %}
+{% endfor %}
+{% block content %}<div class="col-md-12">
+        <div>
+            <img src="{{graficaBase64}}" width="100%" height="400">
+        </div>
+    </div>
+    <div class="col-md-12">
+        <table align="center" class="table table-bordered" style="width:50%;padding:0 15px 0 15px;">
+            <thead>
+                <tr>
+                    <th align="left">Disposición</th>
+                    <th align="center"># de veces utilizada</th>
+                    <th align="center">Porcentaje</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for disposicion in datos %}
+                    <tr>
+                        <td align="left">{{disposicion.nombre}}</td>
+                        <td align="center"><span class="peso">{{disposicion.cantidad}}</span></td>
+                        <td align="center">{{(disposicion.cantidad*100/total)|round(1)}}%</td>
+                    </tr>
+                {% endfor %}
+                <tr>
+                    <td colspan="3"><hr></td>
+                </tr>
+                <tr>
+                    <td align="left">Total</td>
+                    <td align="center"><span class="peso">{{total}}</span></td>
+                    <td align="center">100%</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

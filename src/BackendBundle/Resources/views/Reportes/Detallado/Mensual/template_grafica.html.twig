@@ -1,0 +1,108 @@
+<script type="text/javascript">
+    google.charts.setOnLoadCallback(drawChartMensual);
+    function drawChartMensual() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'mes');
+        {% for tipoResiduo in tiposResiduos %}
+                data.addColumn('number', '{{tipoResiduo.nombre}}');
+                data.addColumn({type: 'string', role: 'tooltip'});
+        {% endfor %}
+                data.addRows([
+        {% for fecha,tipos in datos %}
+                    ['{{fecha}}',
+            {% for nombre,tipoResiduo in tipos %}
+                {{ tipoResiduo.peso }},'{{ nombre }} : {{tipoResiduo.peso|number_format(3, ',', '.')|replace('.',',')}}',
+            {% endfor %}
+                        ],
+        {% endfor %}
+            ]);
+            var options = {
+                explorer: {
+                    actions: ['dragToZoom', 'rightClickToReset'],
+                    axis: 'horizontal',
+                    keepInBounds: true,
+                    maxZoomIn: 4.0
+                },
+                isStacked: true,
+                hAxis: {
+                    title: 'Año-Mes',
+                }
+                ,
+                vAxis: {
+                    title: 'Peso en Kg',
+                }
+                ,
+                tooltip: {
+                    isHtml: true
+                }
+                ,
+                animation: {
+                    duration: 1000,
+                    easing: 'out',
+                    startup: true
+                },
+                pointSize: 3,
+                title: '{{titulo}}',
+                colors: [
+    {% set contador = 0 %}
+    {% for tipoResiduo in tiposResiduos %}
+                    '#{{tipoResiduo.color}}',
+        {% set contador = contador +1 %}
+    {% endfor %}
+                ]
+            };
+            var chart = new google.visualization.ColumnChart(document.getElementById('{{nombre_grafica}}'));
+            google.visualization.events.addListener(chart, 'ready',
+                    function () {
+                        $('#form_mensual').find('#r_detallado_fechas_form_imagen_grafica').val(chart.getImageURI());
+                        $('#form_mensual').find('button[name="excel"]').eq(0).removeAttr('disabled');
+                        $('#form_mensual').find('button[name="pdf"]').eq(0).removeAttr('disabled');
+                    });
+            chart.draw(data, options);
+        }
+        $(window).resize(function () {
+            if (drawChartMensual && typeof drawChartMensual === 'function') {
+                drawChartMensual();
+            }
+        });
+</script>
+<div class="col-md-12">
+    <div id="{{nombre_grafica}}" style="width: 100%; height: 400px; margin: 0 auto"></div>
+</div>
+</script>
+<div class="col-md-12">
+    <table class="table table-bordered" style="width:100%">
+        <thead>
+            <tr>
+                <th>
+                    Año-Mes/Peso en KG
+                </th>
+                {% for tipoResiduo in tiposResiduos %}
+                    <th>
+                        {{tipoResiduo.nombre}}
+                    </th>
+                {% endfor %}
+                <th>
+                    Total
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for fecha,tipos in datos %}
+                <tr>
+                    <td>{{fecha}}</td>
+                    {% set sumaTotal =  0 %}
+                    {% for tipo in tipos%}
+                        {% set sumaTotal = sumaTotal+ tipo.peso %}
+                        <td>
+                            <span class="peso">{{tipo.peso|number_format(3, ',', '.')}}</span>
+                        </td>
+                    {% endfor %}
+                    <td>
+                        <span class="peso">{{sumaTotal|number_format(3, ',', '.')}}</span>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>

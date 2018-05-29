@@ -1,0 +1,76 @@
+<script type="text/javascript">
+    google.charts.setOnLoadCallback(drawChartTipos);
+    function drawChartTipos() {
+        var dataTable = new google.visualization.DataTable();
+        dataTable.addColumn('string', 'Residuos');
+        dataTable.addColumn('number', 'Cantidad en Kg');
+        dataTable.addColumn({type: 'string', role: 'tooltip'});
+        dataTable.addColumn({type: 'string', role: 'style'});
+        dataTable.addRows([
+            {% for residuo in datos %}
+                        {% if residuo.peso > 0 %}
+                ['{{residuo.nombre}}',{{residuo.peso}} , '{{residuo.nombre}} : {{residuo.peso|number_format(3, ',', '.')}}', '#{{residuo.color}}'],
+                        {% endif %}
+            {% endfor %}
+            ]);
+            var options = {
+                title: '{{titulo}}',
+                pieResidueSliceLabel: 'Otro',
+                hAxis: {
+                    title: 'Residuos',
+                },
+                vAxis: {
+                    title: 'Peso en Kg',
+                },
+                animation: {
+                    duration: 1000,
+                    easing: 'out',
+                    startup: true
+                },
+                legend: {position: 'none'}
+            };
+            var chart = new google.visualization.ColumnChart(document.getElementById('{{nombre_grafica}}'));
+            google.visualization.events.addListener(chart, 'ready',
+                    function () {
+                        $('#form_tipos').find('#r_detallado_tipos_form_imagen_grafica').val(chart.getImageURI());
+                        $('#form_tipos').find('button[name="excel"]').eq(0).removeAttr('disabled');
+                        $('#form_tipos').find('button[name="pdf"]').eq(0).removeAttr('disabled');
+                    });
+            chart.draw(dataTable, options);
+        }
+        $(window).resize(function () {
+            if (drawChartTipos && typeof drawChartTipos === 'function') {
+                drawChartTipos();
+            }
+        });
+</script>
+<div class="col-md-12">
+    <div id="{{nombre_grafica}}" style="width: 100%; height: 400px; margin: 0 auto"></div>
+</div>
+<div class="col-md-12">
+    <table class="table table-bordered" style="width:20%">
+        <thead>
+            <tr>
+                <th>Residuo</th>
+                <th>Peso en Kg</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            {%set sumaTotal = 0 %}
+            {% for residuo in datos %}
+                {% if residuo.peso > 0 %}
+                    {%set sumaTotal = sumaTotal+ residuo.peso %}
+                    <tr>
+                        <td>{{residuo.nombre}}</td>
+                        <td><span class="peso">{{residuo.peso|number_format(3, ',', '.')}}</span></td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+            <tr>
+                <td>Total</td>
+                <td><span class="peso">{{sumaTotal|number_format(3, ',', '.')}}</span></td>
+            </tr>
+        </tbody>
+    </table>
+</div>

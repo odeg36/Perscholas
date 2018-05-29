@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping 
+    xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd"
+    xmlns:gedmo="http://gediminasm.org/schemas/orm/doctrine-extensions-mapping">
+    
+    <entity repository-class="ModelBundle\Entity\CapacitacionRepository" name="ModelBundle\Entity\Capacitacion" table="capacitacion">
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO"/>
+        </id>
+        
+        <field name="fechaCapacitacion" type="datetime" column="fechaCapacitacion" nullable="1" />
+        <field name="numeroAsistentes" type="integer" column="numeroAsistentes"/>
+        <field name="archivoCapacitacion" type="string" column="archivoCapacitacion" nullable="1" length="255"/>
+        <field name="evidenciaFotografica" type="string" column="evidenciaFotografica" nullable="1" length="255"/>
+    
+        <field name="fechaCreacion" type="datetime" column="fecha_creacion">
+            <gedmo:timestampable on="create"/>
+        </field>
+        
+        <field name="fechaActualizacion" type="datetime" column="fecha_actualizacion">
+            <gedmo:timestampable on="update"/>
+        </field>
+        
+        <many-to-one field="gestor" target-entity="ModelBundle\Entity\User" inversed-by="capacitaciones" orphan-removal="true">
+            <join-column name="gestor_id" referenced-column-name="id" on-delete="restrict" on-update="cascade" nullable="0"/>
+        </many-to-one>
+        
+        <many-to-one field="tipoCapacitacion" target-entity="ModelBundle\Entity\TipoCapacitacion" inversed-by="capacitaciones" orphan-removal="true">
+            <join-column name="tipo_capacitacion_id" referenced-column-name="id" on-delete="restrict" on-update="cascade" nullable="0"/>
+        </many-to-one>
+        
+        <many-to-one field="centro_recoleccion" target-entity="ModelBundle\Entity\CentroRecoleccion" inversed-by="capacitaciones" orphan-removal="true">
+            <join-column name="centro_recoleccion_id" referenced-column-name="id" on-delete="restrict" on-update="cascade" nullable="0"/>
+        </many-to-one>
+
+    </entity>
+</doctrine-mapping>

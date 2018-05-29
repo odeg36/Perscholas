@@ -1,0 +1,204 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <style type="text/css">
+            .space > td{
+                padding-bottom: 50px;
+            }
+            p {
+                margin: 3px 0px;
+                font-size: 12px;
+            }
+            td{
+                padding: 3px;
+            }
+            .texto_superior_factura{
+                font-size: 11px;
+                color: #77933C;
+            }
+            .texto_superiormini_factura{
+                font-size: 10px;
+                color: #77933C;
+            }
+            .texto_cuerpo_factura{
+                font-size: 12px;
+            }
+            .texto_inferior_factura{
+                font-size: 10px;
+            }
+            .correo_factura{
+                text-decoration: underline;
+            }
+            .datos_bancarios{
+                font-size: 11px;
+                text-align: center;
+            }
+            .encabezado{
+                font-size: 13px;
+                color:#974000;
+                font-weight: bolder;
+            }
+            .titulo_tabla{
+                color: #77933C;
+                font-weight: bolder;
+                text-transform: uppercase;
+                font-size: 13px;
+            }
+        </style>
+        <script src="{{ base_dir ~ asset('bundles/frontend/js/jquery-2.1.4.min.js') }}" ></script>
+        <script>
+            var format = function (num, show) {
+                if (show) {
+                    num = num.split('.').join(',');
+                }
+                var str = num.toString().replace("$", ""), parts = false, output = [], i = 1, formatted = null;
+                if (str.indexOf(",") > 0) {
+                    parts = str.split(",");
+                    str = parts[0];
+                }
+                str = str.split("").reverse();
+                for (var j = 0, len = str.length; j < len; j++) {
+                    if (str[j] != ".") {
+                        output.push(str[j]);
+                        if (i % 3 == 0 && j < (len - 1)) {
+                            output.push(".");
+                        }
+                        i++;
+                    }
+                }
+                formatted = output.reverse().join("");
+                return(formatted + ((parts) ? "," + parts[1].substr(0, 3) : ""));
+            };
+            $(document).ready(function () {
+                $('.precio').each(function (k, v) {
+                    var show = true;
+                    $(v).text(format($(v).text(),show));
+                });
+            });
+        </script>
+    </head>
+    <body style="font-family:Arial,Verdana,Sans-serif,Serif">
+        <div style="margin:20px auto;width:80%;float:right">
+            <img style="height:auto;max-width:200px;" align="right" src="{{ base_dir ~ asset('bundles/frontend/images/logo_kontrol_grun.png') }}">
+        </div>
+        <table border="0" style="margin:20px auto;width:80%;border-collapse: collapse" >
+            <tbody>
+                <tr>
+                    <td>
+                        <p class="texto_superior_factura">NIT. 900.541.572 - 7</p>
+                        <p class="texto_superior_factura">Kontrolgrün S.A.S</p>
+                        <p class="texto_superior_factura">Cra. 45 a No 34 sur 57</p>
+                        <p class="texto_superior_factura">Tel: +57-4-2701396</p>
+                        <p class="texto_superior_factura"><span text-decoration: underline>informacion@kontrolgrun.com</span></p>
+                        <p class="texto_superior_factura">Envigado - Colombia</p>
+                    </td>
+                    <td align="right" width="70%">
+                        <p class="texto_superiormini_factura">IVA Régimen común</p>
+                        <p class="texto_superiormini_factura">No somos grandes contribuyentes</p>
+                        <p class="texto_superiormini_factura">Ni retenedores de IVA</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div style="clear:both"></div>
+        <table border="0" style="margin:5px auto;width:80%;border-width: 1px;" >
+            <tbody>
+                <tr>
+                    <td><span class="encabezado">Empresa {{cliente.nombre}}</span></td>
+                    <td><span class="encabezado">NIT/C.C {{cliente.nit}}</span></td>
+                </tr>
+                <tr>
+                    <td><span class="encabezado">Dirección {{cliente.direccion}}</span></td>
+                    <td><span class="encabezado">Fecha {{ "now"|date("d/m/Y") }}</span></td>
+                </tr>
+                <tr>
+                    <td><span class="encabezado">Persona de contacto {{cliente.nombreReplegal}}</span></td>
+                    <td><span class="encabezado">Teléfono {{cliente.telefono}}</span></td>
+                </tr>
+            </tbody>
+        </table>
+        <table border style="margin:20px auto;width:80%;border-collapse: collapse" >
+            <thead>
+                <tr>
+                    <th class="titulo_tabla">Item</th>
+                    <th class="titulo_tabla">Descripción</th>
+                    <th class="titulo_tabla">Cantidad</th>
+                    <th class="titulo_tabla">Valor Unitario</th>
+                    <th class="titulo_tabla">Valor Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="space">
+                    <td class="texto_cuerpo_factura">1</td>
+                    <td class="texto_cuerpo_factura">Uso de la plataforma Grünberta</td>
+                    <td class="texto_cuerpo_factura">1</td>
+                    <td class="texto_cuerpo_factura">$<span class="precio">{{factura.valorAPagar}}</span></td>
+                    <td class="texto_cuerpo_factura">$<span class="precio">{{factura.valorAPagar}}</span></td>
+                </tr>
+                <tr>
+                    <td colspan="3"></td>
+                    <td class="texto_cuerpo_factura">Valor a pagar</td>
+                    <td class="texto_cuerpo_factura">$<span class="precio">{{factura.valorAPagar}}</span></td>
+                </tr>
+            </tbody>
+        </table>
+        <table border="1" style="margin:20px auto;width:80%;border-collapse: collapse" >
+            <tbody>
+                <tr>
+                    <td class="texto_cuerpo_factura">Observaciones:<br/><br/>
+                        Forma de pago: <span style="text-transform: uppercase; font-weight: bold">{{cliente.formaPago.nombre}}</span><br><br>
+                        <span class="datos_bancarios">Cuenta corriente Bancolombia No. 275.574.340.09 a nombre de Kontrolgrün S.A.S</span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <table border="0" style="margin:20px auto;width:80%;border-collapse: collapse" >
+            <tbody>
+                <tr>
+                    <td>
+                        <br/>
+                        <br/>
+                        _____________________________
+                        <br/>
+                        Firma autorizada
+                        <br/>
+                        <span style="font-weight: bold">Kontrolgrün</span>
+                    </td>
+                    <td>
+                        <br/>
+                        <br/>
+                        _____________________________
+                        <br/>
+                        Firma cliente
+                        <br/>
+                        <span style="font-weight: bold">{{cliente.nombre}}</span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <table border="0" style="margin:20px auto;width:80%;border-collapse: collapse;font-size: 10px;" >
+            <tbody>
+                <tr>
+                    <td>
+                        <p class="texto_inferior_factura">La presente FACTURA DE VENTA se asimila en todos sus efectos a una Letra de Cambio (Art. 774 Numeral 6) del Código de comercio.</p>
+                        <p class="texto_inferior_factura">
+                            El cliente acepta que las personas que firman esta factura tienen autorización para ello y por lo tanto en ese acto son representantes
+                            del cliente el cual se hace responsable de la cancelación. El incumplimiento del pago de esta FACTURA DE VENTA causará intereses de mora a la taza
+                            máxima legal vigente.
+                        </p>
+                        <p style="font-size: 11px;font-weight: bold">
+                            RESOLUCIÓN DIAN N <sup>o</sup> 110000667674 del 2016/02/23 Rango de numeración autorizada desde el N<sup>o</sup> 501 hasta N<sup>o</sup>1000
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center">
+                        <p style="font-size: 9px;">Software: </p>
+                        <img style="height:auto;width:25%;max-width:180px;" src="{{ base_dir ~ asset('bundles/frontend/images/horizontal_logo_grun.png') }}">
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </body>
+</html>
